@@ -1,19 +1,26 @@
 /* Generic function-style interface to workers. Supports async/await as well as callback. */
 const callWorker = (url, arg, callback) => {
 
+  // Handle remote url:
+  if (!url.startsWith('.')) {
+    url = `${snubert.sourceRoot}workers/get-data.js`;
 
-  /*
-  const getWorkerUrl = url => {
-    const content = `importScripts( "${url}" );`;
-    return URL.createObjectURL(new Blob([content], { type: "text/javascript" }));
+    // Derive url from snubert source if set:
+    if (!url.startsWith('https://')) {
+      if (!snubert.sourceRoot) {
+        throw new Error(`Snubert source not set.`);
+      }
+      url = `${snubert.sourceRoot}workers/${url}.js`;
+    }
+
+    /* Returns a non-cors-blocking url. */
+    const getWorkerUrl = url => {
+      const content = `importScripts('${url}');`;
+      return URL.createObjectURL(new Blob([content], { type: "text/javascript" }));
+    }
+
+    url = getWorkerUrl(url);
   }
-
-  url = getWorkerUrl(url);
-  */
-
-
-
-
 
   const worker = new Worker(url);
   worker.postMessage(arg);

@@ -1,40 +1,59 @@
-import * as components from './components/all/all.js';
-import { modal } from './components/modal.js';
-import { callWorker } from './utils/call-worker.js';
-import { createElement } from './utils/elements.js';
-import { focus } from './utils/focus.js';
-import { states } from './utils/states.js';
-import { storage } from './utils/storage.js';
-import { theme } from './utils/theme.js';
+import * as components from './components/all.js';
+import * as utils from './utils/all.js';
+
 
 
 /* Class for the 'snubert' namespace. */
 class Snubert {
   #eRoot;
+  #source;
   constructor() {
-    this.callWorker = callWorker;
     this.components = components;
-    this.createElement = createElement;
-    this.focus = focus;
-    this.modal = modal;
-    this.states = states;
-    this.storage = storage;
-    this.theme = theme;
+    this.modal = components.modal;
+
+    this.callWorker = utils.callWorker;
+    this.createElement = utils.createElement;
+    this.focus = utils.focus;
+    this.getData = utils.getData;
+    this.states = utils.states;
+    this.storage = utils.storage;
+    this.theme = utils.theme;
   }
 
   get eRoot() {
     if (!this.#eRoot) {
-      throw new Error(`Root element not set. Use 'setRoot(element)' to set root element.`);
+      throw new Error(`Snubert root element not set. Use 'setRoot(element)' to set root element.`);
     }
     return this.#eRoot;
   }
 
-  set eRoot(value) {
+  set eRoot(_) {
     throw new Error(`Property 'eRoot' is read-only. Use 'setRoot(element)' to set root element.`);
   }
 
+  get source() {
+    if (!this.#source) {
+      console.warn(`Snubert source not set.`);
+    }
+    return this.#source;
+  }
+
+  set source(value) {
+    this.#source = value;
+  }
+
+  get sourceRoot() {
+    if (this.#source) {
+      return this.source.replace('snubert.min.js', '');
+    }
+  }
+
+  set sourceRoot(_) {
+    throw new Error(`Property 'sourceRoot' is read-only.`);
+  }
+
   createComponent(Component, properties, kwargs = {}) {
-    return new window.snubert.components[Component](properties, kwargs);
+    return new this.components[Component](properties, kwargs);
   }
 
   setRoot(element) {

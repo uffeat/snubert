@@ -4,7 +4,7 @@ self.addEventListener("message", event => {
 
   // Internal wrapper function to enable async/await (for response):
   asyncWrapper = async () => {
-    const response = await fetch(`https://snubert.dev/_/api/get-data?${query}`)
+    const response = await fetch(`https://snubert.dev/_/api/get-data?${query}`);
     if (response.ok) {
       const data = await response.json();
 
