@@ -1,13 +1,25 @@
 /* Generic function-style interface to workers. Supports async/await as well as callback. */
 const callWorker = (url, arg, callback) => {
-  const worker = new Worker(url)
-  worker.postMessage(arg)
+
+  const getWorkerUrl = url => {
+    const content = `importScripts( "${url}" );`;
+    return URL.createObjectURL(new Blob([content], { type: "text/javascript" }));
+  }
+
+  url = getWorkerUrl(url);
+
+
+
+
+
+  const worker = new Worker(url);
+  worker.postMessage(arg);
   // Return promise to enable return of data from worker's onmessage event:
   return new Promise(resolve => {
     worker.onmessage = event => {
-      resolve(event.data)
-      callback && callback(event.data)
-      worker.terminate()
+      resolve(event.data);
+      callback && callback(event.data);
+      worker.terminate();
     }
   })
 }
