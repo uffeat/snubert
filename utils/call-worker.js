@@ -2,6 +2,14 @@
 const callWorker = (url, arg, callback) => {
 
   // Handle remote url:
+
+  /*
+  ------------------------------------------------------------------------------
+  WARNING: Using workers with remote urls come with a big hit on performance!!!!
+  ------------------------------------------------------------------------------
+  Instead, copy workers to client app or use utils.
+  */
+
   if (!url.startsWith('.')) {
     url = `${snubert.sourceRoot}workers/get-data.js`;
 
@@ -37,20 +45,36 @@ const callWorker = (url, arg, callback) => {
 export { callWorker };
 
 /*
-HOW TO USE (two ways):
+HOW TO USE (different ways):
 
-1. await:
-const data = await window.snubert.callWorker('./workers/get-data.js', 'key=key-1')
-console.log(data)
-console.log("This is logged AFTER data is logged.")
+With async...
 
-2. callback:
-window.snubert.callWorker('./workers/get-data.js', 'key=key-1', data => {
-  console.log(data)
-})
-console.log("This is logged BEFORE data is logged.")
+1. Poor performance...
+const dataPromiseHttpGetDataWorker = await snubert.callWorker('https://cdn.jsdelivr.net/gh/uffeat/snubert@latest/workers/get-data.js', 'key=key-1');
+console.log(`Data from http getData worker with await: ${dataPromiseHttpGetDataWorker['data-key']}`);
 
+2. Poor performance...
+const dataPromiseSourceGetDataWorker = await snubert.callWorker('get-data', 'key=key-1');
+console.log(`Data from source getData worker with await: ${dataPromiseSourceGetDataWorker['data-key']}`);
 
+3. Good performance (requires worker to be present in app, i.e., not a remote url)...
+const dataPromiseLocalGetDataWorker = await snubert.callWorker('./workers/get-data.js', 'key=key-1');
+console.log(`Data from local getData worker with await: ${dataPromiseLocalGetDataWorker['data-key']}`);
 
+With callback...
 
+4. Poor performance..
+snubert.callWorker('https://cdn.jsdelivr.net/gh/uffeat/snubert@latest/workers/get-data.js', 'key=key-1', data => {
+  console.log(`Data from callWorker and https: ${data['data-key']}`);
+});
+
+5. Poor performance..
+snubert.callWorker('get-data', 'key=key-1', data => {
+  console.log(`Data from callWorker with source: ${data['data-key']}`);
+});
+
+6. Good performance (requires worker to be present in app, i.e., not a remote url)...
+snubert.callWorker('./workers/get-data.js', 'key=key-1', data => {
+  console.log(`Data from local callWorker and callback: ${data['data-key']}`);
+});
 */

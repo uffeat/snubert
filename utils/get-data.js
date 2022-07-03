@@ -10,3 +10,21 @@ const getData = async (query, callback) => {
 }
 
 export { getData };
+
+
+/*
+How to use
+----------
+
+1. With callback:
+
+snubert.getData('key=key-1', data => {
+  console.log(`Data from getData with callback: ${data['data-key']}`);
+});
+
+2. With async:
+
+const dataPromiseFromGetDataUtil = await snubert.getData('key=key-1');
+console.log(`Data from getData util with await: ${dataPromiseFromGetDataUtil['data-key']}`);
+
+*/

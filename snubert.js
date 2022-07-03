@@ -1,23 +1,21 @@
+import normalizeStylesheet from "./styles/normalize.css" assert { type: "css" };
+import mainStylesheet from "./styles/main.css" assert { type: "css" };
 import * as components from './components/all.js';
 import * as utils from './utils/all.js';
-
-
 
 /* Class for the 'snubert' namespace. */
 class Snubert {
   #eRoot;
   #source;
   constructor() {
+    document.adoptedStyleSheets = [...document.adoptedStyleSheets, normalizeStylesheet, mainStylesheet]
+
     this.components = components;
     this.modal = components.modal;
 
-    this.callWorker = utils.callWorker;
-    this.createElement = utils.createElement;
-    this.focus = utils.focus;
-    this.getData = utils.getData;
-    this.states = utils.states;
-    this.storage = utils.storage;
-    this.theme = utils.theme;
+    for (const [prop, value] of Object.entries(utils)) {
+      this[prop] = value;
+    }
   }
 
   get eRoot() {
@@ -66,7 +64,6 @@ class Snubert {
   }
 
 }
-
 
 const snubert = new Snubert();
 window.snubert = snubert;

@@ -6,7 +6,6 @@ class Base extends HTMLElement {
     this.#root = this.attachShadow({
       mode: 'open',
     });
-   
   }
 
   /* Syncs attribute -> property. */
