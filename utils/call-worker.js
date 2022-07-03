@@ -1,12 +1,15 @@
 /* Generic function-style interface to workers. Supports async/await as well as callback. */
 const callWorker = (url, arg, callback) => {
 
+
+  /*
   const getWorkerUrl = url => {
     const content = `importScripts( "${url}" );`;
     return URL.createObjectURL(new Blob([content], { type: "text/javascript" }));
   }
 
   url = getWorkerUrl(url);
+  */
 
 
 

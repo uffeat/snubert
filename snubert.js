@@ -7,7 +7,6 @@ import { states } from './utils/states.js';
 import { storage } from './utils/storage.js';
 import { theme } from './utils/theme.js';
 
-console.log("Executing 'snubert' module...")
 
 /* Class for the 'snubert' namespace. */
 class Snubert {
