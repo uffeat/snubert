@@ -58,6 +58,20 @@ class PluginSlots {
     observer.observe(observed, { childList: true, subtree })
   }
 
+  /* Passes on array of added or removed elements to callback, whenever elements are added/removed. */
+  _setClassChangeCallback(callback) {
+    const observer = new MutationObserver(mutations => {
+      mutations.forEach(mutation => {
+        if (mutation.attributeName === 'class') {
+          callback()
+        }
+        observer.disconnect()
+      })
+    })
+
+    observer.observe(this, { attributes: true })
+  }
+
   /* Adds slot change event handler to a given slot. */
   _addSlotChangeHandler(slot, handler) {
     const eSlot = this._getSlotElement(slot)

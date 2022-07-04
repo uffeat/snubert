@@ -6,14 +6,14 @@ import { focus } from '../utils/focus.js';
 
 /* Button component with optional ripple effect. */
 class Button extends Base {
-  #eButton
-  #value
+  #eButton;
+  #value;
   // Bind event handlers (allows removal):
-  #addRippleBound = this.#addRipple.bind(this)
-  #setFocusBound = this.#setFocus.bind(this)
+  #addRippleBound = this.#addRipple.bind(this);
+  #setFocusBound = this.#setFocus.bind(this);
   constructor(properties) {
-    super()
-    this._addPlugins(PluginClick, PluginStyles)
+    super();
+    this._addPlugins(PluginClick, PluginStyles);
     this.html = /*html*/ `
     <style>
       button {
@@ -63,132 +63,151 @@ class Button extends Base {
         position: relative;
       }
 
-      :host([primary]) button {
+      :host(.primary) button {
         background-color: var(--primaryColor400);
         color: var(--textColorOnPrimary);
         box-shadow: var(--boxShadow1);
       }
 
-      :host([primary]) button:hover {
+      :host(.primary) button:hover {
         background-color: var(--primaryColor500);
       }
 
-      :host([primary]) span.ripple {
+      :host(.primary) span.ripple {
         background-color: var(--primaryColor300);
       }
 
-      :host([secondary]) button {
+      :host(.secondary) button {
         background-color: var(--secondaryColor400);
         color: var(--textColorOnSecondary);
         box-shadow: var(--boxShadow1);
       }
 
-      :host([secondary]) button:hover {
+      :host(.secondary) button:hover {
         background-color: var(--secondaryColor500);
       }
 
-      :host([secondary]) span.ripple {
+      :host(.secondary) span.ripple {
         background-color: var(--secondaryColor300);
       }
     </style>
 
-    <button></button>
-    `
-    this.#eButton = this.root.querySelector('button')
+    <button>
+      <slot></slot>
+    </button>
+    `;
+    this.#eButton = this.root.querySelector('button');
 
 
-    this.updateProperties(properties)
+    this.updateProperties(properties);
   }
-
+  
   /* Defines attributes to sync with properties. */
   static get observedAttributes() {
-    return ['focus-scope', 'ripple', 'text', 'value']
+    return ['focus-scope', 'ripple', 'value', 'class'];
+  }
+
+  get class() {
+    return this.getAttribute('class');
+  }
+
+  set class(value) {
+    if (value.includes('primary') && value.includes('secondary')) {
+      //const classArray = value.split(' ');
+      const classArray = ['stuff', 'primary', 'secondary'];
+      const lastAdded = classArray[classArray.length-1]
+      const [lastClass, ...firstClasses] = classArray.reverse()
+      console.log("lastClass", lastClass)
+      console.log("firstClasses", firstClasses)
+      console.warn(`The 'primary' and 'secondary' classes are mutually exclusive. Only '' wil be applied`);
+
+    }
+    console.log("class changed to: ", value)
+    this._syncAttribute('class', value);
   }
 
   get focusScope() {
-    return this.hasAttribute('focus-scope')
+    return this.hasAttribute('focus-scope');
   }
 
   set focusScope(value = 'global') {
     if (value) {
-      this.addEventListener('click', this.#setFocusBound)
+      this.addEventListener('click', this.#setFocusBound);
     }
     else {
-      this.removeEventListener('click', this.#setFocusBound)
+      this.removeEventListener('click', this.#setFocusBound);
     }
-    this._syncAttribute('focusScope', value)
+    this._syncAttribute('focusScope', value);
   }
 
   /* Returns ripple flag. */
   get ripple() {
-    return this.hasAttribute('ripple')
+    return this.hasAttribute('ripple');
   }
 
   /* Sets ripple flag. */
   set ripple(value) {
     if (value === true) {
-      this.addEventListener('click', this.#addRippleBound)
+      this.addEventListener('click', this.#addRippleBound);
     }
     else {
-      this.removeEventListener('click', this.#addRippleBound)
+      this.removeEventListener('click', this.#addRippleBound);
     }
-    this._syncAttribute('ripple', value)
+    this._syncAttribute('ripple', value);
   }
 
   /* Returns text. */
   get text() {
-    return this.#eButton.textContent
+    return this.textContent;
   }
 
   /* Sets text. */
   set text(value) {
-    this.#eButton.textContent = value
-    this._syncAttribute('text', value)
+    this.textContent = value;
   }
 
-  /* . */
+  /* Returns text. */
   get value() {
-    return this.#value
+    return this.#value;
   }
 
   /* . */
   set value(value) {
-    this.#value = _interpretAttributeValue(value, 'toBoolean', 'toNumber', 'none')
-    this._syncAttribute('value', this.#value, 'fromBoolean', 'fromNumber', 'none')
+    this.#value = _interpretAttributeValue(value, 'toBoolean', 'toNumber', 'none');
+    this._syncAttribute('value', this.#value, 'fromBoolean', 'fromNumber', 'none');
   }
 
   getValueOnClick(callback) {
-    callback && callback(this.value)
+    callback && callback(this.value);
     return new Promise(resolve => {
       this.addEventListener('click', event => {
-          resolve(event.target.value)
-        })
+        resolve(event.target.value);
+      })
     })
   }
 
   #addRipple(event) {
-    const eOldRipple = this.root.querySelector('span.ripple')
+    const eOldRipple = this.root.querySelector('span.ripple');
     if (eOldRipple) {
-      eOldRipple.remove()
+      eOldRipple.remove();
     }
-    const eRipple = document.createElement('span')
-    eRipple.classList.add("ripple")
+    const eRipple = document.createElement('span');
+    eRipple.classList.add("ripple");
     // Set eRipple size (ripple diameter):
-    const size = Math.max(this.#eButton.clientWidth, this.#eButton.clientHeight)
-    eRipple.style.width = eRipple.style.height = `${size}px`
+    const size = Math.max(this.#eButton.clientWidth, this.#eButton.clientHeight);
+    eRipple.style.width = eRipple.style.height = `${size}px`;
     // Position eRipple:
-    eRipple.style.left = `${event.clientX - this.#eButton.offsetLeft - size / 2}px`
-    eRipple.style.top = `${event.clientY - this.#eButton.offsetTop - size / 2}px`
-    this.#eButton.append(eRipple)
+    eRipple.style.left = `${event.clientX - this.#eButton.offsetLeft - size / 2}px`;
+    eRipple.style.top = `${event.clientY - this.#eButton.offsetTop - size / 2}px`;
+    this.#eButton.append(eRipple);
   }
 
   #setFocus(event) {
-    focus.set(event.target, this.getAttribute('focus-scope'))
+    focus.set(event.target, this.getAttribute('focus-scope'));
   }
 
 }
 
-
-utilDefine(Button)
+utilDefine(Button);
 
 export { Button };

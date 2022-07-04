@@ -9,6 +9,16 @@ snubert.source = 'https://cdn.jsdelivr.net/gh/uffeat/snubert@0.1.3/snubert.min.j
 
 const cHome = snubert.createComponent('Home');
 
-//cHome.mount(snubert.cRoot)  // TODO: Fix!!!
+//snubert.eRoot.append(cHome);
+cHome.mount(snubert.eRoot);
 
-snubert.eRoot.append(cHome)
+const cButton1 = snubert.createComponent('Button', {ripple: true, text: "Primary"});
+//cButton1.textContent = "My button"
+
+cHome.addElement(cButton1, {slot: 'main'});
+
+cButton1.classList.add('primary');
+cButton1.classList.add('secondary');
+//console.log(cButton1.class)
+cButton1.classList.remove('primary');
+

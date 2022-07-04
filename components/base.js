@@ -8,6 +8,51 @@ class Base extends HTMLElement {
     });
   }
 
+
+
+
+
+  /* Sets one or more attibutes. */
+  updateAttibutes(attributes) {
+    for (const [attr, value] in Object.entries(value)) {
+
+      this.setAttribute(attr, value);
+    }
+
+  }
+
+  /* Returns attibutes object - potentially filtered. */
+  getAttibutes(kwargs = {}) {
+    const { observed, noValue } = kwargs;
+    const attributeNames = [...this.attributes];
+
+    console.log(attributeNames)
+
+    if (observed === true) {
+
+    }
+    else if (observed === false) {
+
+    }
+    const attrs = attributeNames.reduce((attrs, attribute) => {
+      attrs[attribute.name] = attribute.value;
+      return attrs;
+    }, {});
+
+
+    console.log(attrs)
+    return attrs
+  }
+
+
+
+
+
+
+
+
+
+
   /* Syncs attribute -> property. */
   attributeChangedCallback(attr, oldValue, newValue) {
     // Abort if no change (prevents infinite loop caused by reflection):
