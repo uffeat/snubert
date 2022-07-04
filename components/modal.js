@@ -18,7 +18,7 @@ class Modal extends Base {
   #onWrapperClickBound = this.#onWrapperClick.bind(this);
   constructor(properties) {
     super();
-    this._addPlugins(PluginSlots);
+    this.addPlugins(PluginSlots);
     this.html = /*html*/ `
     <style>
       :host {
@@ -218,19 +218,19 @@ class Modal extends Base {
       this.root.querySelector('header button').removeEventListener('click', this.#onCloseButtonClickBound);
     }
     this.#dismissible = value;
-    this._syncAttribute('dismissible', value);
+    this.propertyChangeCallback('dismissible', value);
   }
 
   /* Returns modal headline. */
   get headline() {
-    return this.getAttribute('headline');
+    return this.getAttribute('headline');  // TODO: Replace with #headline
   }
 
   /* Sets modal headline. */
   set headline(value) {
     value = value || '';
     this.root.querySelector('.headline').textContent = value;
-    this._syncAttribute('headline', value);
+    this.propertyChangeCallback('headline', value);
   }
 
   /* Returns flag that controls if modal should open. */
@@ -247,7 +247,7 @@ class Modal extends Base {
     else {
       this.style.display = 'none';
     }
-    this._syncAttribute('open', value);
+    this.propertyChangeCallback('open', value);
   }
 
   /* Returns value of modal (as set via control buttons). */
@@ -297,7 +297,7 @@ class Modal extends Base {
     return new Promise(resolve => {
       eeControlButtons.forEach(element => element.addEventListener('click', event => {
         // 'event.target.value' is a string, so perform interpretation:
-        this.#value = this._interpretAttributeValue(event.target.value, 'toBoolean', 'toNumber', 'none');
+        this.#value = this.interpretAttributeValue(event.target.value, 'toBoolean', 'toNumber', 'none');
         this.callback && this.callback(this.#value);
         resolve(this.#value);
         this.closeOnButtonClick && this.remove();

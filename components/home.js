@@ -5,7 +5,7 @@ import { PluginSlots } from './plugin-slots.js'
 class Home extends Base {
   constructor(properties) {
     super()
-    this._addPlugins(PluginSlots)
+    this.addPlugins(PluginSlots)
     this.html = /*html*/ `
     <style>
       :host {
@@ -276,7 +276,7 @@ class Home extends Base {
   }
 
   set closed(value) {
-    this._syncAttribute('closed', value)
+    this.propertyChangeCallback('closed', value)
   }
 
   get headline() {
@@ -285,7 +285,7 @@ class Home extends Base {
 
   set headline(value) {
     this.root.querySelectorAll('.headline').forEach(element => element.textContent = value)
-    this._syncAttribute('headline', value)
+    this.propertyChangeCallback('headline', value)
   }
 
   get logo() {
@@ -294,7 +294,7 @@ class Home extends Base {
 
   set logo(value) {
     this.root.querySelector('.logo').src = value
-    this._syncAttribute('logo', value)
+    this.propertyChangeCallback('logo', value)
   }
 
   close() {

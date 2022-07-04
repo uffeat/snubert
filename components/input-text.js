@@ -123,7 +123,7 @@ class InputText extends Base {
 
   set message(value) {
     this.root.querySelector('.msg').textContent = value;
-    this._syncAttribute('message', value);
+    this.propertyChangeCallback('message', value);
   }
 
   get prompt() {
@@ -132,15 +132,15 @@ class InputText extends Base {
 
   set prompt(value) {
     this.root.querySelector('.prompt').textContent = value;
-    this._syncAttribute('prompt', value);
+    this.propertyChangeCallback('prompt', value);
   }
 
   get required() {
-    return this.hasAttribute('required');
+    return this.hasAttribute('required');  // TODO Replace with #required
   }
 
   set required(value) {
-    this._syncAttribute('required', value);
+    this.propertyChangeCallback('required', value);
   }
 
 }

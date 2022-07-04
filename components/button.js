@@ -7,13 +7,15 @@ import { focus } from '../utils/focus.js';
 /* Button component with optional ripple effect. */
 class Button extends Base {
   #eButton;
+  #focusScope;
+  #ripple;
   #value;
   // Bind event handlers (allows removal):
   #addRippleBound = this.#addRipple.bind(this);
   #setFocusBound = this.#setFocus.bind(this);
   constructor(properties) {
     super();
-    this._addPlugins(PluginClick, PluginStyles);
+    this.addPlugins(PluginClick, PluginStyles);
     this.html = /*html*/ `
     <style>
       button {
@@ -98,62 +100,51 @@ class Button extends Base {
     `;
     this.#eButton = this.root.querySelector('button');
 
-
     this.updateProperties(properties);
   }
-  
+
   /* Defines attributes to sync with properties. */
   static get observedAttributes() {
     return ['focus-scope', 'ripple', 'value', 'class'];
   }
 
-  get class() {
-    return this.getAttribute('class');
-  }
-
-  set class(value) {
-    if (value.includes('primary') && value.includes('secondary')) {
-      //const classArray = value.split(' ');
-      const classArray = ['stuff', 'primary', 'secondary'];
-      const lastAdded = classArray[classArray.length-1]
-      const [lastClass, ...firstClasses] = classArray.reverse()
-      console.log("lastClass", lastClass)
-      console.log("firstClasses", firstClasses)
-      console.warn(`The 'primary' and 'secondary' classes are mutually exclusive. Only '' wil be applied`);
-
+  attributeChangedCallback(attr, oldValue, newValue) {
+    super.attributeChangedCallback && super.attributeChangedCallback(attr, oldValue, newValue);
+    if (attr === 'class') {
+      this.filterMutuallyExclusiveCssClasses(['primary', 'secondary']);
     }
-    console.log("class changed to: ", value)
-    this._syncAttribute('class', value);
   }
 
   get focusScope() {
-    return this.hasAttribute('focus-scope');
+    return this.#focusScope;
   }
 
-  set focusScope(value = 'global') {
-    if (value) {
+  set focusScope(arg) {
+    if (arg !== undefined) {
       this.addEventListener('click', this.#setFocusBound);
     }
     else {
       this.removeEventListener('click', this.#setFocusBound);
     }
-    this._syncAttribute('focusScope', value);
+    this.#focusScope = arg
+    this.propertyChangeCallback('focusScope', arg);
   }
 
   /* Returns ripple flag. */
   get ripple() {
-    return this.hasAttribute('ripple');
+    return this.#ripple;
   }
 
   /* Sets ripple flag. */
-  set ripple(value) {
-    if (value === true) {
+  set ripple(arg) {
+    if (arg === true) {
       this.addEventListener('click', this.#addRippleBound);
     }
     else {
       this.removeEventListener('click', this.#addRippleBound);
     }
-    this._syncAttribute('ripple', value);
+    this.#ripple = arg
+    this.propertyChangeCallback('ripple', arg);
   }
 
   /* Returns text. */
@@ -172,9 +163,9 @@ class Button extends Base {
   }
 
   /* . */
-  set value(value) {
-    this.#value = _interpretAttributeValue(value, 'toBoolean', 'toNumber', 'none');
-    this._syncAttribute('value', this.#value, 'fromBoolean', 'fromNumber', 'none');
+  set value(arg) {
+    this.#value = this.interpretAttributeValue(arg, 'toBoolean');
+    this.propertyChangeCallback('value', this.#value, 'fromBoolean');
   }
 
   getValueOnClick(callback) {

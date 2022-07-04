@@ -6,7 +6,7 @@ import { PluginSlots } from './plugin-slots.js';
 class Root extends Base {
   constructor(properties) {
     super();
-    this._addPlugins(PluginSlots);
+    this.addPlugins(PluginSlots);
     this.html = /*html*/ `
     <style>
     </style>

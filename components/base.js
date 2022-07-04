@@ -8,50 +8,45 @@ class Base extends HTMLElement {
     });
   }
 
-
-
-
-
-  /* Sets one or more attibutes. */
-  updateAttibutes(attributes) {
-    for (const [attr, value] in Object.entries(value)) {
-
-      this.setAttribute(attr, value);
-    }
-
+  /* Returns root html. */
+  get html() {
+    return this.root.innerHTML;
   }
 
-  /* Returns attibutes object - potentially filtered. */
-  getAttibutes(kwargs = {}) {
-    const { observed, noValue } = kwargs;
-    const attributeNames = [...this.attributes];
-
-    console.log(attributeNames)
-
-    if (observed === true) {
-
+  /* Sets root html. */
+  set html(html) {
+    while (this.root.firstChild) {
+      this.root.firstChild.remove();
     }
-    else if (observed === false) {
-
-    }
-    const attrs = attributeNames.reduce((attrs, attribute) => {
-      attrs[attribute.name] = attribute.value;
-      return attrs;
-    }, {});
-
-
-    console.log(attrs)
-    return attrs
+    this.root.innerHTML = html || ''  // To avoid showing 'undefined'.
   }
 
+  /* Returns shadow root. */
+  get root() {
+    return this.#root;
+  }
 
+  /* Makes shadow root read-only. */
+  set root(_) {
+    throw new Error(`'root' is read-only.`);
+  }
 
-
-
-
-
-
-
+  /* Adds properties of Plugin classes to component (use in component constructor). */
+  addPlugins(...Plugins) {
+    // Plugin should be a class without constructor and without (#)private properties.
+    // ... Also, cannot call 'super' to refrence Plugin.
+    Plugins.forEach(Plugin => {
+      const ownPropertyDescriptors = Object.getOwnPropertyDescriptors(Plugin.prototype)
+      for (const [name, descriptor] of Object.entries(ownPropertyDescriptors)) {
+        if (name !== 'constructor' && name !== '_constructor') {
+          Object.defineProperty(this, name, descriptor);
+        }
+      }
+      if (Plugin.prototype._constructor) {
+        Plugin.prototype._constructor();
+      }
+    })
+  }
 
   /* Syncs attribute -> property. */
   attributeChangedCallback(attr, oldValue, newValue) {
@@ -81,32 +76,45 @@ class Base extends HTMLElement {
     // NB: Any further attribute -> property value interpretation should be done in property setters with '_interpretAttributeValue(value, requiredType)'.
   }
 
-  /* Returns root html. */
-  get html() {
-    return this.root.innerHTML;
-  }
-
-  /* Sets root html. */
-  set html(html) {
-    while (this.root.firstChild) {
-      this.root.firstChild.remove();
+  /* . */
+  filterMutuallyExclusiveCssClasses(mutuallyExclusiveClasses) {
+    const conflictingClasses = [...this.classList].filter(c => mutuallyExclusiveClasses.includes(c))
+    if (conflictingClasses.length > 1) {
+      const [classToKeep, ...classesToRemove] = conflictingClasses.reverse()
+      console.warn(`The classes '${conflictingClasses.join(', ')}' are mutually exclusive. Only '${classToKeep}' will be applied...`);
+      classesToRemove.forEach(c => this.classList.remove(c));
     }
-    this.root.innerHTML = html || ''  // To avoid showing 'undefined'.
   }
 
-  /* Returns shadow root. */
-  get root() {
-    return this.#root;
+  /* Returns CSS var of component (:host). Specify without '--'. */
+  getCssVar(cssVar) {
+    return getComputedStyle(this).getPropertyValue(`--${cssVar}`); 
   }
 
-  /* Makes shadow root read-only. */
-  set root(_) {
-    throw new Error(`'root' is read-only.`);
+  /* Sets CSS var of component (:host). Specify without '--'. */
+  setCssVar(cssVar, value) {
+    this.style.setProperty(`--${cssVar}`, value);
   }
 
   /* Hides component */
   hide() {
     this.style.display = 'none';
+  }
+
+  /* Helper method for property setters. Performs additional attribute value interpretations not handled in 'attributeChangedCallback'. */
+  interpretAttributeValue(value, ...interpretations) {
+    if (interpretations.includes('toBoolean')) {
+      if (value === 'true') {
+        return true
+      }
+      else if (value === 'false') {
+        return false
+      }
+      else if (value === 'null') {
+        return null
+      }
+    }
+    return value
   }
 
   /* Appends component to element. */
@@ -117,6 +125,45 @@ class Base extends HTMLElement {
       }
     }
     element.append(this);
+  }
+
+  /* Syncs property -> attribute with value interpretation (to be called from property setters). */
+  propertyChangeCallback(prop, value, ...interpretations) {
+    const attr = this.#getObservedAttribute(prop);
+    
+    // No 'interpretations' -> perform default interpretation
+    if (interpretations.length === 0) {
+      if (value === true) {
+        this.setAttribute(attr, '');
+      }
+      else if (!value) {  // false/null/undefined.
+        this.removeAttribute(attr);
+      }
+      // Default (no) interpretation:
+      else {
+        this.setAttribute(attr, value);
+      }
+    }
+
+    // 'interpretations' passed -> perform special interpretation:
+    else {
+      if (interpretations.includes('fromBoolean') && [true, false, null].includes(value)) {
+        // Perform literal interpretation of Boolean (incl. null):
+        if (value === true) {
+          this.setAttribute(attr, 'true');
+        }
+        else if (value === false) {
+          this.setAttribute(attr, 'false');
+        }
+        else if (value === null) {
+          this.setAttribute(attr, 'null');
+        }
+      }
+      // Default (no) interpretation:
+      else {
+        this.setAttribute(attr, value);
+      }
+    }
   }
 
   /* Shows component. */
@@ -143,25 +190,50 @@ class Base extends HTMLElement {
     }
   }
 
-  /* Adds properties of Plugin classes to component (use in component constructor). */
-  _addPlugins(...Plugins) {
-    // Plugin should be a class without constructor and without (#)private properties.
-    // ... Also, cannot call 'super' to refrence Plugin.
-    Plugins.forEach(Plugin => {
-      const ownPropertyDescriptors = Object.getOwnPropertyDescriptors(Plugin.prototype)
-      for (const [name, descriptor] of Object.entries(ownPropertyDescriptors)) {
-        if (name !== 'constructor' && name !== '_constructor') {
-          Object.defineProperty(this, name, descriptor);
-        }
-      }
-      if (Plugin.prototype._constructor) {
-        Plugin.prototype._constructor();
-      }
-    })
+  /* Returns and validates observed attr that correponds to a given property (camel -> kebab). */
+  #getObservedAttribute(prop) {
+
+    /* Returns true if character c is upper case or contains an integer; otherwise returns false. */
+    const isUpperOrInt = c => {
+      const isUpper = c.charCodeAt(0) >= 65 && c.charCodeAt(0) <= 90;
+      const isNumber = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'].includes(c);
+      return isUpper || isNumber;
+    }
+
+    const attr = prop.split('').map((c) => isUpperOrInt(c) ? '-' + c.toLowerCase() : c).join('');
+    // Verify that attribute is observed:
+    if (!this.constructor?.observedAttributes?.includes(attr)) {
+      throw new Error(`Property '${prop}' has no corresponding observed attribute ('${attr}').`);
+    }
+    return attr;
   }
 
-  /* Helper method for property setters. Performs additional attribute value interpretations not handled in 'attributeChangedCallback'. */
-  _interpretAttributeValue(value, ...interpretations) {
+  /* Updates property if property in component. */
+  #updateProperty(prop, value) {
+    if (!(prop in this)) {
+      console.info(`Component has no property '${prop}'. Property not set.`);
+      return;
+    }
+    // Take into account that property could be write-only:
+    try {
+      if (this[prop] !== value)
+        this[prop] = value;
+    }
+    catch {
+      this[prop] = value;
+    }
+  }
+
+}
+
+export { Base };
+
+
+
+/*
+interpretAttributeValue(value, ...interpretations) {
+    console.log(typeof value)
+
     if (interpretations.includes('toBoolean')) {
       if (value === 'true') {
         return true
@@ -176,7 +248,7 @@ class Base extends HTMLElement {
     else if (interpretations.includes('toStringArray') && Array.isArray(value)) {
       return value.split(';').map(w => w.trim().toLowerCase()).filter(w => w !== '')
     }
-    else if (interpretations.includes('toNumber') && Number(value) !== NaN) {
+    else if (interpretations.includes('toNumber')) {
       return Number(value);
     }
     else if (interpretations.includes('toDate') && (typeof value === 'string' || value instanceof String)) {
@@ -188,11 +260,13 @@ class Base extends HTMLElement {
       return value
     }
     // If we get to this point, something went wrong.
-    throw new Error(`Could not interpret value: '${value}'.`);
+    throw new Error(`Could not interpret value: '${value}' of type '${typeof value}'.`);
   }
+*/
 
-  /* Syncs property -> attribute with value interpretation (to be called from property setters). */
-  _syncAttribute(prop, value, ...interpretations) {
+
+/*
+propertyChangeCallback(prop, value, ...interpretations) {
     const attr = this.#getObservedAttribute(prop);
     // No 'interpretations' -> perform default interpretation
     // (interprets booleans as adding/removing no-value attibutes and explicitly interprets numbers to strings):
@@ -243,33 +317,39 @@ class Base extends HTMLElement {
       throw new Error(`Could not interpret value '${value}' with interpretations '${interpretations}'.`);
     }
   }
+*/
 
-  /* Returns and validates observed attr that correponds to a given property (camel -> kebab). */
-  #getObservedAttribute(prop) {
 
-    /* Returns true if character c is upper case or contains an integer; otherwise returns false. */
-    const isUpperOrInt = c => {
-      const isUpper = c.charCodeAt(0) >= 65 && c.charCodeAt(0) <= 90;
-      const isNumber = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'].includes(c);
-      return isUpper || isNumber;
+
+
+/* 
+  updateAttibutes(attributes) {
+    for (const [attr, value] in Object.entries(value)) {
+
+      this.setAttribute(attr, value);
     }
 
-    const attr = prop.split('').map((c) => isUpperOrInt(c) ? '-' + c.toLowerCase() : c).join('');
-    // Verify that attribute is observed:
-    if (!this.constructor?.observedAttributes?.includes(attr)) {
-      throw new Error(`Property '${prop}' has no corresponding observed attribute ('${attr}').`);
-    }
-    return attr;
   }
 
-  /* Updates property if property in component. */
-  #updateProperty(prop, value) {
-    if (!(prop in this)) {
-      console.warn(`Component has no property '${prop}'. New property created and set.`);
+  getAttibutes(kwargs = {}) {
+    const { observed, noValue } = kwargs;
+    const attributeNames = [...this.attributes];
+
+    console.log(attributeNames)
+
+    if (observed === true) {
+
     }
-    this[prop] = value;
+    else if (observed === false) {
+
+    }
+    const attrs = attributeNames.reduce((attrs, attribute) => {
+      attrs[attribute.name] = attribute.value;
+      return attrs;
+    }, {});
+
+
+    console.log(attrs)
+    return attrs
   }
-
-}
-
-export { Base };
+  */

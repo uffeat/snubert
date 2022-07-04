@@ -7,15 +7,17 @@ import { utilDefine } from './util-define.js';
 class Pulse extends Base {
   #eDynamic;
   #eStatic;
+  #on;
   constructor(properties) {
     super();
-    this._addPlugins(PluginClick, PluginSlots);
+    this.addPlugins(PluginClick, PluginSlots);
     this.html = /*html*/ `
     <style>
       :host {
         --dynamicColor: var(--primaryColor100, pink);
         --size: 48px;
         --staticColor: var(--primaryColor500, red);
+        --textColor: red;
         --time: 800ms;
       }
             
@@ -41,6 +43,7 @@ class Pulse extends Base {
         justify-content: center;
         align-items: center;
         background-color: var(--staticColor);
+        color: var(--textColor);
         z-index: 2;   /* TODO: CSS var? */
       }
             
@@ -80,72 +83,93 @@ class Pulse extends Base {
   }
 
   static get observedAttributes() {
-    return ['color', 'on', 'pulse-color', 'size', 'text', 'time'];
+    return ['color', 'on', 'pulse-color', 'size', 'text-color', 'time'];
   }
 
   /* Returns color of inner circle. */
   get color() {
-    return getComputedStyle(this).getPropertyValue('--staticColor'); 
+    // CSS var serves as private property.
+    return this.getCssVar('staticColor');
   }
 
-   /* Sets color of inner circle. */
-  set color(value) {
-    this.style.setProperty('--staticColor', value);
-    this._syncAttribute('color', value);
+  /* Sets color of inner circle. */
+  set color(arg) {
+    // CSS var serves as private property.
+    this.setCssVar('staticColor', arg);
+    this.propertyChangeCallback('color', arg);
   }
 
   /* Returns Boolean flag for starting/stopping pulse action. */
   get on() {
-    return this.hasAttribute('on'); 
+    return this.#on;
   }
 
   /* Sets Boolean flag for starting/stopping pulse action. */
-  set on(value) {
-    this._syncAttribute('on', value);
+  set on(arg) {
+    this.#on = arg;
+    this.propertyChangeCallback('on', arg);
   }
 
   /* Returns color of outer dynamic circle. */
   get pulseColor() {
-    return getComputedStyle(this).getPropertyValue('--dynamicColor'); 
+    // CSS var serves as private property.
+    return this.getCssVar('dynamicColor');
   }
 
   /* Sets color of outer dynamic circle. */
-  set pulseColor(value) {
-    this.style.setProperty('--dynamicColor', value);
-    this._syncAttribute('pulseColor', value);
+  set pulseColor(arg) {
+    // CSS var serves as private property.
+    this.setCssVar('dynamicColor', arg);
+    this.propertyChangeCallback('pulseColor', arg);
   }
 
   /* Returns size of component (max. diameter of outer dynamic circle). */
   get size() {
-    return getComputedStyle(this).getPropertyValue('--size'); 
+    // CSS var serves as private property.
+    return this.getCssVar('size');
   }
 
   /* Sets size of component (max. diameter of outer dynamic circle). */
-  set size(value) {
-    this.style.setProperty('--size', value);
-    this._syncAttribute('size', value);
+  set size(arg) {
+    // CSS var serves as private property.
+    this.setCssVar('size', arg);
+    this.propertyChangeCallback('size', arg);
   }
 
   /* Returns text. */
   get text() {
-    return this.#eStatic.textContent; 
+    return this.textContent;
   }
 
   /* Sets text. */
-  set text(value) {
-    this.#eStatic.textContent = value
-    this._syncAttribute('text', value);
+  set text(arg) {
+    this.textContent = arg
+  }
+
+  /* Returns text color. */
+  get textColor() {
+    // CSS var serves as private property.
+    return this.getCssVar('textColor');
+  }
+
+  /* Sets text color. */
+  set textColor(arg) {
+    // CSS var serves as private property.
+    this.setCssVar('textColor', arg);
+    this.propertyChangeCallback('textColor', arg);
   }
 
   /* Returns pulse cycle time. */
   get time() {
-    return getComputedStyle(this).getPropertyValue('--time'); 
+    // CSS var serves as private property.
+    return this.getCssVar('time');
   }
 
   /* Sets pulse cycle time. */
-  set time(value) {
-    this.style.setProperty('--time', value);
-    this._syncAttribute('time', value);
+  set time(arg) {
+    // CSS var serves as private property.
+    this.setCssVar('time', arg);
+    this.propertyChangeCallback('time', arg);
   }
 
   /* Starts pulse action. */
