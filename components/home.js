@@ -281,7 +281,7 @@ import { mixin } from './util-mixin.js'
   }
 
   set closed(arg) {
-    this.propertyChangeCallback('closed', arg);
+    this.setNoValueAttribute('closed', arg);
   }
 
   get disabled() {
@@ -290,7 +290,7 @@ import { mixin } from './util-mixin.js'
 
   set disabled(arg) {
     this.close();
-    this.propertyChangeCallback('disabled', arg);
+    this.setNoValueAttribute('disabled', arg);
   }
 
   get headline() {
@@ -299,7 +299,7 @@ import { mixin } from './util-mixin.js'
 
   set headline(arg) {
     this.root.querySelectorAll('.headline').forEach(element => element.textContent = arg);
-    this.propertyChangeCallback('headline', arg);
+    this.setAttribute('headline', arg);
   }
 
   get logo() {
@@ -308,7 +308,7 @@ import { mixin } from './util-mixin.js'
 
   set logo(arg) {
     this.root.querySelector('.logo').src = arg;
-    this.propertyChangeCallback('logo', arg);
+    this.setAttribute('logo', arg);
   }
 
   close() {

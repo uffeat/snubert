@@ -301,7 +301,7 @@ class Modal extends mixin(Base, MixinSlots) {
     return new Promise(resolve => {
       eeControlButtons.forEach(element => element.addEventListener('click', event => {
         // 'event.target.value' is a string, so perform interpretation (relevant if Boolean):
-        this.#value = this.interpretAttributeValue(event.target.value, 'toBoolean');
+        this.#value = this.interpretToPropertyValue(event.target.value, 'toBoolean');
         this.callback && this.callback(this.#value);
         resolve(this.#value);
         this.closeOnButtonClick && this.remove();

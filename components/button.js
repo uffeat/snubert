@@ -164,8 +164,8 @@ class Button extends mixin(Base, MixinClick, MixinStyles) {
 
   /* . */
   set value(arg) {
-    this.#value = this.interpretAttributeValue(arg, 'toBoolean');
-    this.propertyChangeCallback('value', this.#value, 'fromBoolean');
+    this.#value = this.interpretToPropertyValue(arg, 'toBoolean');
+    this.setAttribute('value', this.#value);
   }
 
   getValueOnClick(callback) {

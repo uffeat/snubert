@@ -113,10 +113,30 @@ class Base extends HTMLElement {
     this.style.display = 'none';
   }
 
-   // TODO: Move to mixin.
-   // TODO: Rename to: interpretToAttributeValue
+  // TODO: Move to mixin.
   /* Helper method for property setters. Performs additional attribute value interpretations not handled in 'attributeChangedCallback'. */
-  interpretAttributeValue(value, ...interpretations) {
+  interpretToAttributeValue(value, ...interpretations) {
+    if (interpretations.includes('fromBoolean') && [true, false, null].includes(value)) {
+      // Perform literal interpretation of Boolean (incl. null):
+      if (value === true) {
+        return 'true';
+      }
+      else if (value === false) {
+        return 'false';
+      }
+      else if (value === null) {
+        return 'null';
+      }
+    }
+    // Default (no) interpretation:
+    return value;
+  }
+
+
+
+  // TODO: Move to mixin.
+  /* Helper method for property setters. Performs additional attribute value interpretations not handled in 'attributeChangedCallback'. */
+  interpretToPropertyValue(value, ...interpretations) {
     if (interpretations.includes('toBoolean')) {
       if (value === 'true') {
         return true;
@@ -142,13 +162,26 @@ class Base extends HTMLElement {
     element.append(this);
   }
 
-  // TODO: Separate out a interpretToPropertyValue method move to mixin.
+  /* */
+  setNoValueAttribute(attr, propValue) {
+    if (propValue === true) {
+      this.setAttribute(attr, '');
+    }
+    else if (!propValue) {  // false/null/undefined.
+      this.removeAttribute(attr);
+    }
+    // Default (no) interpretation:
+    else {
+      throw new Error(`Expected Boolean or null. Got '${propValue}';`)
+    }
+
+  }
+
+  // TODO: Separate out a interpretToAttributeValue method move to mixin.
   /* Syncs property -> attribute with value interpretation (to be called from property setters). */
-  propertyChangeCallback(prop, value, ...interpretations) {
+  propertyChangeCallback(prop, value) {
     const attr = this.#getObservedAttribute(prop);
-    
-    // No 'interpretations' -> perform default interpretation
-    if (interpretations.length === 0) {
+    // Interpretation of Booleans:
       if (value === true) {
         this.setAttribute(attr, '');
       }
@@ -159,27 +192,6 @@ class Base extends HTMLElement {
       else {
         this.setAttribute(attr, value);
       }
-    }
-
-    // 'interpretations' passed -> perform special interpretation:
-    else {
-      if (interpretations.includes('fromBoolean') && [true, false, null].includes(value)) {
-        // Perform literal interpretation of Boolean (incl. null):
-        if (value === true) {
-          this.setAttribute(attr, 'true');
-        }
-        else if (value === false) {
-          this.setAttribute(attr, 'false');
-        }
-        else if (value === null) {
-          this.setAttribute(attr, 'null');
-        }
-      }
-      // Default (no) interpretation:
-      else {
-        this.setAttribute(attr, value);
-      }
-    }
   }
 
   /* Shows component. */

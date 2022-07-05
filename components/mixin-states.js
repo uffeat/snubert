@@ -25,20 +25,20 @@ const MixinStates = Parent => {
         }
       }
   
-      // .. or:
+      // .. or (less elegant):
   
       'user': data => {
         if (data === true) {
-          cLoginLink.hide();
+          myComponent.hide();
         }
         if (data === false) {
-          cLoginLink.show();
+          myComponent.show();
         }
       }
       */
 
       this.clearStates();
-      this.#states = states
+      this.#states = states;
       this.refreshStates();
     }
 
