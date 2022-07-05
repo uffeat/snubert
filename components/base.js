@@ -86,6 +86,8 @@ class Base extends HTMLElement {
     // NB: Any further attribute -> property value interpretation should be done in property setters with '_interpretAttributeValue(value, requiredType)'.
   }
 
+
+  // TODO: Move to mixin.
   /* . */
   filterMutuallyExclusiveCssClasses(mutuallyExclusiveClasses) {
     const conflictingClasses = [...this.classList].filter(c => mutuallyExclusiveClasses.includes(c))
@@ -111,6 +113,8 @@ class Base extends HTMLElement {
     this.style.display = 'none';
   }
 
+   // TODO: Move to mixin.
+   // TODO: Rename to: interpretToAttributeValue
   /* Helper method for property setters. Performs additional attribute value interpretations not handled in 'attributeChangedCallback'. */
   interpretAttributeValue(value, ...interpretations) {
     if (interpretations.includes('toBoolean')) {
@@ -138,6 +142,7 @@ class Base extends HTMLElement {
     element.append(this);
   }
 
+  // TODO: Separate out a interpretToPropertyValue method move to mixin.
   /* Syncs property -> attribute with value interpretation (to be called from property setters). */
   propertyChangeCallback(prop, value, ...interpretations) {
     const attr = this.#getObservedAttribute(prop);

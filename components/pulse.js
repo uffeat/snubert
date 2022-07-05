@@ -1,16 +1,16 @@
 import { Base } from './base.js';
-import { PluginClick } from './plugin-click.js';
-import { PluginSlots } from './plugin-slots.js';
+import { MixinClick } from './mixin-click.js';
+import { MixinSlots } from './mixin-slots.js';
+import { mixin } from './util-mixin.js';
 import { utilDefine } from './util-define.js';
 
 /* Component for marking. */
-class Pulse extends Base {
+class Pulse extends mixin(Base, MixinClick, MixinSlots) {
   #eDynamic;
   #eStatic;
   #on;
   constructor(properties) {
     super();
-    this.addPlugins(PluginClick, PluginSlots);
     this.rootHtml = /*html*/ `
     <style>
       :host {

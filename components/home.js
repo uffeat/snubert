@@ -29,7 +29,7 @@ import { mixin } from './util-mixin.js'
         box-shadow: var(--boxShadow1);
       }
 
-      header .menu {
+      header a.toggle {
         height: 100%;
         display: flex;
         align-items: center;
@@ -40,16 +40,16 @@ import { mixin } from './util-mixin.js'
         transition: background-color 200ms;
       }
 
-      header .menu:hover {
+      header a.toggle:hover {
         background-color: var(--primaryColor500);
       }
 
-      header .menu>svg {
+      header a.toggle>svg {
         width: 32px;
         height: 32px;
       }
 
-      header .menu>svg>path {
+      header a.toggle>svg>path {
         fill: var(--textColorOnPrimary);
         stroke: transparent;
       }
@@ -199,7 +199,7 @@ import { mixin } from './util-mixin.js'
       }
     </style>
     <header>
-      <a class="menu toggle" title="Toggle side panel">
+      <a class="toggle" title="Toggle side panel">
         <svg viewBox="0 0 24 24">
           <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" />
         </svg>
@@ -268,15 +268,25 @@ import { mixin } from './util-mixin.js'
   }
 
   static get observedAttributes() {
-    return ['closed', 'headline', 'logo']
+    return ['closed', 'disabled', 'headline', 'logo']
   }
 
   get closed() {
     return this.hasAttribute('closed')
   }
 
-  set closed(value) {
-    this.propertyChangeCallback('closed', value)
+  set closed(arg) {
+    this.propertyChangeCallback('closed', arg)
+  }
+
+
+  get disabled() {
+    return this.hasAttribute('disabled')
+
+  }
+
+  set disabled(arg) {
+    this.propertyChangeCallback('closed', arg)
   }
 
   get headline() {

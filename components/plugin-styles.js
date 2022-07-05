@@ -1,8 +1,0 @@
-/* . */
-class PluginStyles {
-
-  
-
-}
-
-export { PluginStyles };
