@@ -244,7 +244,7 @@ class Home extends Base {
 
     // Style of link components added to side slot (demo of '_addSlotChangeHandler'):
     // (::slotted is insufficient)
-    this._addSlotChangeHandler('side', event => {
+    this.addSlotChangeHandler('side', event => {
       event.target.assignedNodes().forEach(element => {
         if (element.tagName === 'SNU-LINK') {
           element.addStyles(this.#getCssText('sideLink'))
@@ -252,17 +252,15 @@ class Home extends Base {
       })
     })
 
-    // Style of link components added to top slot (demo of '_addObserver'):
-     // (::slotted is insufficient)
-    this._addObserver('addedNodes', nodes => {
-      nodes.filter(element => element.tagName === 'SNU-LINK' && element.slot === 'top')
-        .forEach(element => {
+    this.setAddedNodesCallback(nodes => {
+      const eeTopLinks = nodes.filter(element => element.tagName === 'SNU-LINK' && element.slot === 'top');
+      eeTopLinks.forEach(element => {
           const eLine = document.createElement('SPAN')
           eLine.classList.add('line')
           element.root.append(eLine)
           element.addStyles(this.#getCssText('topLink'))
-        })
-    })
+        });
+      });
 
     this.updateProperties(properties)
   }
@@ -308,7 +306,6 @@ class Home extends Base {
   toggle(event) {
     this.closed = !this.closed
   }
-
 
   /* */
   #getCssText(key) {

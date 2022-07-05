@@ -27,7 +27,8 @@ class State {
   /* Adds subscriber callback. */
   addSubscriber(callback) {
     if (this.#subscribers.includes(callback)) {
-      throw new Error(`Callback already subscribes to state '${this.name}'.`)
+      console.warn(`Callback already subscribes to state '${this.name}'.`);
+      return
     }
     this.#subscribers.push(callback)
     callback(this.data)
@@ -36,7 +37,8 @@ class State {
   /* Removes subscriber callback. */
   removeSubscriber(callback) {
     if (!this.#subscribers.includes(callback)) {
-      throw new Error(`Callback does not subscribe to state '${this.name}'.`)
+      console.warn(`Callback does not subscribe to state '${this.name}'.`);
+      return
     }
     this.#subscribers = this.#subscribers.filter(c => c !== callback)
   }

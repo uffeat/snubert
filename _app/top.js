@@ -1,4 +1,6 @@
 const render = cParent => {
+
+  /*
   const cSignupLink = snubert.createComponent('Link', {
     focusScope: 'top', 
     text: "Sign up",
@@ -29,6 +31,7 @@ const render = cParent => {
     }
   });
   cParent.addElement(cSignupLink, { slot: 'top' });
+  */
 
 
 
@@ -36,14 +39,22 @@ const render = cParent => {
     focusScope: 'top', 
     text: "Log in",
     states: {
-      'user': data => {
+
+      
+
+
+      'user': function(data) {
         if (data === true) {
-          cLoginLink.hide();
+          this.hide();
         }
         if (data === false) {
-          cLoginLink.show();
+          this.show();
         }
       }
+
+
+      
+
     },
     onClick: event => {
       const cUserNameInputText = snubert.createComponent('InputText', {
@@ -67,7 +78,10 @@ const render = cParent => {
   });
   cParent.addElement(cLoginLink, { slot: 'top' });
 
+  console.log(cLoginLink.states)
 
+
+  /*
   const cLogoutLink = snubert.createComponent('Link', {
     focusScope: 'top',
     text: "Log out",
@@ -99,6 +113,7 @@ const render = cParent => {
   });
   cLogoutLink.hide();
   cParent.addElement(cLogoutLink, { slot: 'top' });
+  */
 
 }
 

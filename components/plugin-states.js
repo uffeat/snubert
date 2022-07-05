@@ -1,19 +1,50 @@
-import { states } from '../utils/states.js';
+import { states as stateController } from '../utils/states.js';
 
 /* . */
 class PluginStates {
-  
+
   get states() {
     return this._states;
   }
 
-  set states(value) {
+
+  set states(arg) {
+    /*
+    arg (example):
+
+    'user': function(data) {
+      if (data === true) {
+        this.hide();
+      }
+      if (data === false) {
+        this.show();
+      }
+    }
+
+    .. or:
+
+    'user': data => {
+      if (data === true) {
+        cLoginLink.hide();
+      }
+      if (data === false) {
+        cLoginLink.show();
+      }
+    }
+    */
+
+    this._stateController = stateController;
+
     // TODO: Remove any previously set state subscriptions.
-    this._state = states
-    this._states = value;
-    for (const [state, callback] of Object.entries(this._states)) {
-      // TODO: Do something with callback so that it understands 'this'.
-      this._state.addSubscriber(state, callback)
+
+    this._states = arg
+
+    if (this._states) {
+      for (const [state, callback] of Object.entries(this._states)) {
+        const callbackBound = callback.bind(this)
+        this._stateController.addSubscriber(state, callbackBound)
+      }
+
     }
   }
 

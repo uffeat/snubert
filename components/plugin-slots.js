@@ -26,6 +26,12 @@ class PluginSlots {
     elements.forEach(element => this.addElement(element, { clear: false, slot }))
   }
 
+  /* Adds slot change event handler to a given slot. */
+  addSlotChangeHandler(slot, handler) {
+    const eSlot = this._getSlotElement(slot)
+    eSlot.addEventListener('slotchange', handler)
+  }
+
   /* Removes added elements. */
   clearSlot(slot = '') {
     this._getSlotElement(slot)  // To validate slot.
@@ -43,23 +49,20 @@ class PluginSlots {
     return [...this.root.querySelectorAll('slot')].map(element => element.name)
   }
 
-  /* Passes on array of added or removed elements to callback, whenever elements are added/removed. */
-  _addObserver(mutationType, callback, kwargs = {}) {
-    const { observed = this, subtree = false } = kwargs
-    if (!['addedNodes', 'removedNodes'].includes(mutationType)) {
-      throw new Error(`Invalid mutation type: '${mutationType}'.`)
-    }
+  /* Set callback to be invoked whenever nodes are added. Callback arg: Array of added nodes. */
+  setAddedNodesCallback(callback) {
     const observer = new MutationObserver(mutations => {
       mutations.forEach(mutation => {
-        callback([...mutation[mutationType]])
+        callback([...mutation.addedNodes])
         observer.disconnect()
       })
     })
-    observer.observe(observed, { childList: true, subtree })
+    observer.observe(this, { childList: true })
   }
 
-  /* Passes on array of added or removed elements to callback, whenever elements are added/removed. */
-  _setClassChangeCallback(callback) {
+  /* Set callback to be invoked whenever the component class list is changed. Callback arg: None. */
+  // NB: Alternative: added 'class' to observed attributes and overload attributeChangedCallback.
+  setClassChangeCallback(callback) {
     const observer = new MutationObserver(mutations => {
       mutations.forEach(mutation => {
         if (mutation.attributeName === 'class') {
@@ -68,16 +71,21 @@ class PluginSlots {
         observer.disconnect()
       })
     })
-
     observer.observe(this, { attributes: true })
   }
 
-  /* Adds slot change event handler to a given slot. */
-  _addSlotChangeHandler(slot, handler) {
-    const eSlot = this._getSlotElement(slot)
-    eSlot.addEventListener('slotchange', handler)
+  /* Set callback to be invoked whenever nodes are removed. Callback arg: Array of removed nodes. */
+  setRemovedNodesCallback(callback) {
+    const observer = new MutationObserver(mutations => {
+      mutations.forEach(mutation => {
+        callback([...mutation.removedNodes])
+        observer.disconnect()
+      })
+    })
+    observer.observe(this, { childList: true })
   }
 
+  
   /* Returns slot element by name. Throws exception if slot not found. */
   _getSlotElement(slot = '') {
     const eSlot = this.root.querySelector(slot === '' ? `slot:not([name])` : `slot[name="${slot}"]`)
