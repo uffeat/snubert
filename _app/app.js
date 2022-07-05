@@ -9,9 +9,12 @@ const cHome = snubert.createComponent('Home', {
   states: {
     'user': function(data) {
       if (data === true) {
+        this.disabled = false;
         this.open();
+        
       }
       else {
+        this.disabled = true;
         this.close();
       }
     }

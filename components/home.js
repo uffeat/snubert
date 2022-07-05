@@ -30,6 +30,7 @@ import { mixin } from './util-mixin.js'
       }
 
       header a.toggle {
+        display: initial;
         height: 100%;
         display: flex;
         align-items: center;
@@ -52,6 +53,10 @@ import { mixin } from './util-mixin.js'
       header a.toggle>svg>path {
         fill: var(--textColorOnPrimary);
         stroke: transparent;
+      }
+
+      :host([disabled]) a.toggle {
+        display: none;
       }
 
       header a.home {
@@ -279,14 +284,13 @@ import { mixin } from './util-mixin.js'
     this.propertyChangeCallback('closed', arg)
   }
 
-
   get disabled() {
     return this.hasAttribute('disabled')
 
   }
 
   set disabled(arg) {
-    this.propertyChangeCallback('closed', arg)
+    this.propertyChangeCallback('disabled', arg)
   }
 
   get headline() {
