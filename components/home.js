@@ -269,61 +269,61 @@ import { mixin } from './util-mixin.js'
         });
       });
 
-    this.updateProperties(properties)
+    this.updateProperties(properties);
   }
 
   static get observedAttributes() {
-    return ['closed', 'disabled', 'headline', 'logo']
+    return ['closed', 'disabled', 'headline', 'logo'];
   }
 
   get closed() {
-    return this.hasAttribute('closed')
+    return this.hasAttribute('closed');
   }
 
   set closed(arg) {
-    this.propertyChangeCallback('closed', arg)
+    this.propertyChangeCallback('closed', arg);
   }
 
   get disabled() {
-    return this.hasAttribute('disabled')
-
+    return this.hasAttribute('disabled');
   }
 
   set disabled(arg) {
-    this.propertyChangeCallback('disabled', arg)
+    this.close();
+    this.propertyChangeCallback('disabled', arg);
   }
 
   get headline() {
-    return this.root.querySelector('.headline').textContent
+    return this.root.querySelector('.headline').textContent;
   }
 
-  set headline(value) {
-    this.root.querySelectorAll('.headline').forEach(element => element.textContent = value)
-    this.propertyChangeCallback('headline', value)
+  set headline(arg) {
+    this.root.querySelectorAll('.headline').forEach(element => element.textContent = arg);
+    this.propertyChangeCallback('headline', arg);
   }
 
   get logo() {
-    return this.root.querySelector('.logo').src
+    return this.root.querySelector('.logo').src;
   }
 
-  set logo(value) {
-    this.root.querySelector('.logo').src = value
-    this.propertyChangeCallback('logo', value)
+  set logo(arg) {
+    this.root.querySelector('.logo').src = arg;
+    this.propertyChangeCallback('logo', arg);
   }
 
   close() {
-    this.setAttribute('closed', '')
+    this.setAttribute('closed', '');
   }
 
   open() {
-    this.removeAttribute('closed')
+    this.removeAttribute('closed');
   }
 
-  toggle(event) {
-    this.closed = !this.closed
+  toggle() {
+    this.closed = !this.closed;
   }
 
-  /* */
+  /* REturns CSS (for added elements). */
   #getCssText(key) {
     // style tags in cssText is just a hack to apply linting via the VS Code 'es6-string-html' extension; 
     // tags are removed in return value.
@@ -352,6 +352,7 @@ import { mixin } from './util-mixin.js'
         color: var(--primaryColor500);
       }
       </style>`,
+
       topLink: /*html*/ `<style>
       :host {
         position: relative;
@@ -393,13 +394,13 @@ import { mixin } from './util-mixin.js'
       `
     }
     if (!(key in cssTexts)) {
-      throw new Error(`Invalid key: '${key}'.`)
+      throw new Error(`Invalid key: '${key}'.`);
     }
-    return cssTexts[key].replace('<style>', '').replace('</style>', '')
+    return cssTexts[key].replace('<style>', '').replace('</style>', '');
   }
 
 }
 
-utilDefine(Home)
+utilDefine(Home);
 
 export { Home };

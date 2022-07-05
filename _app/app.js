@@ -10,8 +10,9 @@ const cHome = snubert.createComponent('Home', {
     'user': function(data) {
       if (data === true) {
         this.disabled = false;
-        this.open();
-        
+        if (window.innerWidth > 600) {
+          this.open();
+        }
       }
       else {
         this.disabled = true;
