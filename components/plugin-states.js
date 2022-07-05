@@ -41,10 +41,10 @@ class PluginStates {
 
     if (this._states) {
       for (const [state, callback] of Object.entries(this._states)) {
+        // Binding only takes effect if callback is a non-arrow function:
         const callbackBound = callback.bind(this)
         this._stateController.addSubscriber(state, callbackBound)
       }
-
     }
   }
 
