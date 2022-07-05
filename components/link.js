@@ -43,7 +43,7 @@ class Link extends mixin(Base, MixinClick, MixinSlots, MixinStates, MixinStyles)
       this.removeEventListener('click', this.#setFocusBound);
     }
     this.#focusScope = arg
-    this.propertyChangeCallback('focusScope', arg);
+    this.setAttribute('focus-scope', arg);
   }
 
   get href() {
@@ -52,7 +52,7 @@ class Link extends mixin(Base, MixinClick, MixinSlots, MixinStates, MixinStyles)
 
   set href(arg) {
     this.#eLink.href = arg;
-    this.propertyChangeCallback('href', arg);
+    this.setAttribute('href', arg);
   }
 
   get target() {
@@ -61,7 +61,7 @@ class Link extends mixin(Base, MixinClick, MixinSlots, MixinStates, MixinStyles)
 
   set target(arg) {
     this.#eLink.target = arg;
-    this.propertyChangeCallback('target', arg);
+    this.setAttribute('target', arg);
   }
 
   /* Returns text. */

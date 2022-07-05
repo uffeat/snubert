@@ -121,26 +121,26 @@ class InputText extends Base {
     return this.root.querySelector('.msg').textContent;
   }
 
-  set message(value) {
-    this.root.querySelector('.msg').textContent = value;
-    this.propertyChangeCallback('message', value);
+  set message(arg) {
+    this.root.querySelector('.msg').textContent = arg;
+    this.setAttribute('message', arg);
   }
 
   get prompt() {
     return this.root.querySelector('.prompt').textContent;
   }
 
-  set prompt(value) {
-    this.root.querySelector('.prompt').textContent = value;
-    this.propertyChangeCallback('prompt', value);
+  set prompt(arg) {
+    this.root.querySelector('.prompt').textContent = arg;
+    this.setAttribute('prompt', arg);
   }
 
   get required() {
-    return this.hasAttribute('required');  // TODO Replace with #required
+    return this.hasAttribute('required');  // TODO Replace with #required???
   }
 
-  set required(value) {
-    this.propertyChangeCallback('required', value);
+  set required(arg) {
+    this.setNoValueAttribute('required', arg);
   }
 
 }

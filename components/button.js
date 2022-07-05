@@ -126,8 +126,8 @@ class Button extends mixin(Base, MixinClick, MixinStyles) {
     else {
       this.removeEventListener('click', this.#setFocusBound);
     }
-    this.#focusScope = arg
-    this.propertyChangeCallback('focusScope', arg);
+    this.#focusScope = arg;
+    this.setAttribute('focus-scope', arg);
   }
 
   /* Returns ripple flag. */
@@ -144,7 +144,7 @@ class Button extends mixin(Base, MixinClick, MixinStyles) {
       this.removeEventListener('click', this.#addRippleBound);
     }
     this.#ripple = arg
-    this.propertyChangeCallback('ripple', arg);
+    this.setNoValueAttribute('ripple', arg);
   }
 
   /* Returns text. */

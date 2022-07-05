@@ -177,23 +177,6 @@ class Base extends HTMLElement {
 
   }
 
-  // TODO: Separate out a interpretToAttributeValue method move to mixin.
-  /* Syncs property -> attribute with value interpretation (to be called from property setters). */
-  propertyChangeCallback(prop, value) {
-    const attr = this.#getObservedAttribute(prop);
-    // Interpretation of Booleans:
-      if (value === true) {
-        this.setAttribute(attr, '');
-      }
-      else if (!value) {  // false/null/undefined.
-        this.removeAttribute(attr);
-      }
-      // Default (no) interpretation:
-      else {
-        this.setAttribute(attr, value);
-      }
-  }
-
   /* Shows component. */
   show() {
     this.style.display = 'initial';

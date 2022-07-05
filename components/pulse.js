@@ -96,7 +96,7 @@ class Pulse extends mixin(Base, MixinClick, MixinSlots) {
   set color(arg) {
     // CSS var serves as private property.
     this.setCssVar('staticColor', arg);
-    this.propertyChangeCallback('color', arg);
+    this.setAttribute('color', arg);
   }
 
   /* Returns Boolean flag for starting/stopping pulse action. */
@@ -107,7 +107,7 @@ class Pulse extends mixin(Base, MixinClick, MixinSlots) {
   /* Sets Boolean flag for starting/stopping pulse action. */
   set on(arg) {
     this.#on = arg;
-    this.propertyChangeCallback('on', arg);
+    this.setNoValueAttribute('on', arg);
   }
 
   /* Returns color of outer dynamic circle. */
@@ -120,7 +120,7 @@ class Pulse extends mixin(Base, MixinClick, MixinSlots) {
   set pulseColor(arg) {
     // CSS var serves as private property.
     this.setCssVar('dynamicColor', arg);
-    this.propertyChangeCallback('pulseColor', arg);
+    this.setAttribute('pulseColor', arg);
   }
 
   /* Returns size of component (max. diameter of outer dynamic circle). */
@@ -133,7 +133,7 @@ class Pulse extends mixin(Base, MixinClick, MixinSlots) {
   set size(arg) {
     // CSS var serves as private property.
     this.setCssVar('size', arg);
-    this.propertyChangeCallback('size', arg);
+    this.setAttribute('size', arg);
   }
 
   /* Returns text. */
@@ -156,7 +156,7 @@ class Pulse extends mixin(Base, MixinClick, MixinSlots) {
   set textColor(arg) {
     // CSS var serves as private property.
     this.setCssVar('textColor', arg);
-    this.propertyChangeCallback('textColor', arg);
+    this.setAttribute('textColor', arg);
   }
 
   /* Returns pulse cycle time. */
@@ -169,7 +169,7 @@ class Pulse extends mixin(Base, MixinClick, MixinSlots) {
   set time(arg) {
     // CSS var serves as private property.
     this.setCssVar('time', arg);
-    this.propertyChangeCallback('time', arg);
+    this.setAttribute('time', arg);
   }
 
   /* Starts pulse action. */

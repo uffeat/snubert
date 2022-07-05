@@ -213,7 +213,7 @@ class Modal extends mixin(Base, MixinSlots) {
       this.root.querySelector('x-background').removeEventListener('click', this.#onBackgroundClickBound);
     }
     this.#dismissible = arg;
-    this.propertyChangeCallback('dismissible', arg);
+    this.setNoValueAttribute('dismissible', arg);
   }
 
   /* Returns modal headline. */
@@ -224,7 +224,7 @@ class Modal extends mixin(Base, MixinSlots) {
   /* Sets modal headline. */
   set headline(arg) {
     this.root.querySelector('.headline').textContent = arg || '';
-    this.propertyChangeCallback('headline', arg);
+    this.setAttribute('headline', arg);
   }
 
   /* Returns flag that controls if modal should open. */
@@ -241,7 +241,7 @@ class Modal extends mixin(Base, MixinSlots) {
     else {
       this.style.display = 'none';
     }
-    this.propertyChangeCallback('open', arg);
+    this.setNoValueAttribute('open', arg);
   }
 
   /* Returns value of modal (as set via control buttons). */
@@ -262,7 +262,7 @@ class Modal extends mixin(Base, MixinSlots) {
    /* Sets width of modal. */
   set width(arg) {
     this.setCssVar('width', arg);
-    this.propertyChangeCallback('width', arg);
+    this.setAttribute('width', arg);
   }
 
   /* Adds control button (to footer). */
