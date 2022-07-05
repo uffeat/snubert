@@ -2,8 +2,11 @@ import { Base } from './base.js';
 import { utilDefine } from './util-define.js';
 import { PluginSlots } from './plugin-slots.js';
 
-/* . */
+// TODO: Use dialog HTML element.
+// TODO: Implement reflection.
 
+/* . */
+// Control buttons can be added by the result slot mechanism (slot="footer") or with 'addButton()'/'addButtons()'.
 class Modal extends Base {
   #callback;
   #closeOnButtonClick = true;
@@ -12,7 +15,7 @@ class Modal extends Base {
   #value = null;
   // Define and bind event handlers (for the binding itself and to enable removal):
   #onCloseButtonClickBound = this.#onCloseButtonClick.bind(this);
-  #onBackgroundClickBound = this.#onBackgroundClick.bind(this);
+  #onWrapperClickBound = this.#onWrapperClick.bind(this);
   constructor(properties) {
     super();
     this.addPlugins(PluginSlots);
@@ -22,7 +25,7 @@ class Modal extends Base {
         z-index: var(--zIndexMax, 99);
       }
 
-     x-background {
+      x-wrapper {
         position: absolute;
         top: 0;
         left: 0;
@@ -32,7 +35,7 @@ class Modal extends Base {
         background-color: rgb(0, 0, 0, 0.5);
       }
       
-      x-modal {
+      x-container {
         position: absolute;
         top: max(30%, 100px);
         left: calc(50% - 100px);
@@ -122,7 +125,7 @@ class Modal extends Base {
       }
     </style>
     <x-wrapper>
-      <x-modal>
+      <x-container>
         <header>
           <h3 class="headline"></h3>
           <button title="Dismiss">
@@ -133,16 +136,16 @@ class Modal extends Base {
           </button>
         </header>
         <main>
-          <slot name="main"></slot>
+          <slot></slot>
         </main>
         <footer>
          <slot name="footer"></slot>
         </footer>
-      </x-modal>
+      </x-container>
     </x-wrapper>
     `;
     // Default values for properties with actions in setters should be set via 'defaults' (second arg in updateProperties)
-    // ... rather than directly on private field declarration (e.g., '#open = false'):
+    // ... rather than directlt on private field declarration (e.g., '#open = false'):
     this.updateProperties(properties, {dismissible: false,  open: false });
   }
 
@@ -157,7 +160,6 @@ class Modal extends Base {
 
   /* Sets control (footer) button specification array. */
   set buttons(value) {
-    // Control buttons can also be added with the regular slot mechanism (slot="footer").
     this.#addButtons(value);
   }
 
@@ -187,14 +189,14 @@ class Modal extends Base {
   }
 
   /* Sets modal (main) content. */
-  set content(arg) {
-    if (typeof arg === 'string' || arg instanceof String) {
+  set content(value) {
+    if (typeof value === 'string' || value instanceof String) {
       const eText = document.createElement('p');
-      eText.textContent = arg;
+      eText.textContent = value;
       this.root.querySelector('main').append(eText)
     }
     else {
-      this.addElement(arg, { slot: 'main'});
+      this.append(value);
     }
   }
 
@@ -207,12 +209,12 @@ class Modal extends Base {
   set dismissible(value) {
     if (value === true) {
       this.setAttribute('dismissible', '');
-      this.root.querySelector('x-wrapper').addEventListener('click', this.#onBackgroundClickBound);
+      this.root.querySelector('x-wrapper').addEventListener('click', this.#onWrapperClickBound);
       this.root.querySelector('header button').addEventListener('click', this.#onCloseButtonClickBound);
     }
     else if (value === false) {
       this.removeAttribute('dismissible');
-      this.root.querySelector('x-wrapper').removeEventListener('click', this.#onBackgroundClickBound);
+      this.root.querySelector('x-wrapper').removeEventListener('click', this.#onWrapperClickBound);
       this.root.querySelector('header button').removeEventListener('click', this.#onCloseButtonClickBound);
     }
     this.#dismissible = value;
@@ -311,8 +313,8 @@ class Modal extends Base {
   }
 
   /* Event handler for wrapper click
-  (called via 'this.#onBackgroundClickBound()' and added\removed via the 'dismissible' property). */
-  #onBackgroundClick(event) {
+  (called via 'this.#onWrapperClickBound()' and added\removed via the 'dismissible' property). */
+  #onWrapperClick(event) {
     if (event.target === event.currentTarget) {
       this.remove();
     }

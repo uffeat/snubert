@@ -1,16 +1,16 @@
 const render = cParent => {
 
-  /*
+  
   const cSignupLink = snubert.createComponent('Link', {
     focusScope: 'top', 
     text: "Sign up",
     states: {
-      'user': data => {
+      'user': function(data) {
         if (data === true) {
-          cSignupLink.hide();
+          this.hide();
         }
         if (data === false) {
-          cSignupLink.show();
+          this.show();
         }
       }
     },
@@ -24,25 +24,19 @@ const render = cParent => {
         },
         value => {
           if (value === true) {
-            snubert.state.update('user', true);
+            snubert.states.update('user', true);
           }
         }
       );
     }
   });
   cParent.addElement(cSignupLink, { slot: 'top' });
-  */
-
-
+  
 
   const cLoginLink = snubert.createComponent('Link', {
     focusScope: 'top', 
     text: "Log in",
     states: {
-
-      
-
-
       'user': function(data) {
         if (data === true) {
           this.hide();
@@ -51,10 +45,6 @@ const render = cParent => {
           this.show();
         }
       }
-
-
-      
-
     },
     onClick: event => {
       const cUserNameInputText = snubert.createComponent('InputText', {
@@ -78,15 +68,11 @@ const render = cParent => {
   });
   cParent.addElement(cLoginLink, { slot: 'top' });
 
-  console.log(cLoginLink.states)
-
-
-  /*
   const cLogoutLink = snubert.createComponent('Link', {
     focusScope: 'top',
     text: "Log out",
     states: {
-      'user': data => {
+      'user': function(data) {
         if (data === true) {
           cLogoutLink.show();
         }
@@ -113,7 +99,6 @@ const render = cParent => {
   });
   cLogoutLink.hide();
   cParent.addElement(cLogoutLink, { slot: 'top' });
-  */
 
 }
 
