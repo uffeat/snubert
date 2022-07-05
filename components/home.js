@@ -1,12 +1,14 @@
-import { Base } from './base.js'
-import { utilDefine } from './util-define.js'
-import { PluginSlots } from './plugin-slots.js'
+import { Base } from './base.js';
+import { MixinSlots } from './mixin-slots.js';
+import { MixinStates } from './mixin-states.js';
+import { utilDefine } from './util-define.js';
+import { mixin } from './util-mixin.js'
 
-class Home extends Base {
+//class Home extends Base {
+  class Home extends mixin(Base, MixinSlots, MixinStates) {
   constructor(properties) {
     super()
-    this.addPlugins(PluginSlots)
-    this.html = /*html*/ `
+    this.rootHtml = /*html*/ `
     <style>
       :host {
         --footerHeight: 100px;

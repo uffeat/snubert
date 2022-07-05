@@ -1,12 +1,13 @@
 import { Base } from './base.js';
+import { MixinClick } from './mixin-click.js';
+import { MixinSlots } from './mixin-slots.js';
+import { MixinStates } from './mixin-states.js';
+import { MixinStyles } from './mixin-styles.js';
 import { utilDefine } from './util-define.js';
-import { PluginClick } from './plugin-click.js';
-import { PluginSlots } from './plugin-slots.js';
-import { PluginStates } from './plugin-states.js';
-import { PluginStyles } from './plugin-styles.js';
 import { focus } from '../utils/focus.js';
+import { mixin } from './util-mixin.js';
 
-class Link extends Base {
+class Link extends mixin(Base, MixinClick, MixinSlots, MixinStates, MixinStyles) {
   #eLink;
   #eText;
   #focusScope;
@@ -14,8 +15,7 @@ class Link extends Base {
   #setFocusBound = this.#setFocus.bind(this);
   constructor(properties) {
     super();
-    this.addPlugins(PluginClick, PluginStates, PluginSlots, PluginStyles);
-    this.html = /*html*/ `
+    this.rootHtml = /*html*/ `
     <style>
     </style>
     <a>

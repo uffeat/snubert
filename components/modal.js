@@ -1,25 +1,25 @@
 import { Base } from './base.js';
+import { MixinSlots } from './mixin-slots.js';
 import { utilDefine } from './util-define.js';
-import { PluginSlots } from './plugin-slots.js';
+import { mixin } from './util-mixin.js'
 
 /* . */
 
-class Modal extends Base {
+class Modal extends mixin(Base, MixinSlots) {
   #callback;
   #closeOnButtonClick = true;
   #dismissible;
   #open;
   #value = null;
   // Define and bind event handlers (for the binding itself and to enable removal):
-  #onCloseButtonClickBound = this.#onCloseButtonClick.bind(this);
   #onBackgroundClickBound = this.#onBackgroundClick.bind(this);
   constructor(properties) {
     super();
-    this.addPlugins(PluginSlots);
-    this.html = /*html*/ `
+    this.rootHtml = /*html*/ `
     <style>
       :host {
         z-index: var(--zIndexMax, 99);
+        --width: 400px;
       }
 
      x-background {
@@ -35,13 +35,12 @@ class Modal extends Base {
       x-modal {
         position: absolute;
         top: max(30%, 100px);
-        left: calc(50% - 100px);
-        width: fit-content;
-        min-width: 400px;
-        max-width: 600px;
+        left: calc(50% - var(--width)/2);
+        width: var(--width);
+        
         min-height: 120px;
         z-index: var(--zIndexMax, 99);
-        padding: 8px 8px 8px 16px;
+        
         display: flex;
         flex-direction: column;
         background-color: var(--gray300, lightGray);
@@ -121,11 +120,12 @@ class Modal extends Base {
         background-color: var(--primaryColor100, pink);
       }
     </style>
-    <x-wrapper>
+    <x-background>
       <x-modal>
+
         <header>
           <h3 class="headline"></h3>
-          <button title="Dismiss">
+          <button value="null" title="Dismiss">
             <svg viewBox="0 0 24 24">
               <path
                 d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z" />
@@ -133,17 +133,18 @@ class Modal extends Base {
           </button>
         </header>
         <main>
-          <slot name="main"></slot>
+          <slot></slot>
         </main>
         <footer>
          <slot name="footer"></slot>
         </footer>
+
       </x-modal>
-    </x-wrapper>
+    </x-background>
     `;
     // Default values for properties with actions in setters should be set via 'defaults' (second arg in updateProperties)
     // ... rather than directly on private field declarration (e.g., '#open = false'):
-    this.updateProperties(properties, {dismissible: false,  open: false });
+    this.updateProperties(properties, { dismissible: false, open: false });
   }
 
   static get observedAttributes() {
@@ -194,7 +195,7 @@ class Modal extends Base {
       this.root.querySelector('main').append(eText)
     }
     else {
-      this.addElement(arg, { slot: 'main'});
+      this.append(arg);
     }
   }
 
@@ -204,31 +205,26 @@ class Modal extends Base {
   }
 
   /* Sets flag that controls if modal is dissmissible (top close button shown and click outside modal closes modal with value = null). */
-  set dismissible(value) {
-    if (value === true) {
-      this.setAttribute('dismissible', '');
-      this.root.querySelector('x-wrapper').addEventListener('click', this.#onBackgroundClickBound);
-      this.root.querySelector('header button').addEventListener('click', this.#onCloseButtonClickBound);
+  set dismissible(arg) {
+    if (arg === true) {
+      this.root.querySelector('x-background').addEventListener('click', this.#onBackgroundClickBound);
     }
-    else if (value === false) {
-      this.removeAttribute('dismissible');
-      this.root.querySelector('x-wrapper').removeEventListener('click', this.#onBackgroundClickBound);
-      this.root.querySelector('header button').removeEventListener('click', this.#onCloseButtonClickBound);
+    else if (arg === false) {
+      this.root.querySelector('x-background').removeEventListener('click', this.#onBackgroundClickBound);
     }
-    this.#dismissible = value;
-    this.propertyChangeCallback('dismissible', value);
+    this.#dismissible = arg;
+    this.propertyChangeCallback('dismissible', arg);
   }
 
   /* Returns modal headline. */
   get headline() {
-    return this.getAttribute('headline');  // TODO: Replace with #headline
+    return this.getAttribute('headline');
   }
 
   /* Sets modal headline. */
-  set headline(value) {
-    value = value || '';
-    this.root.querySelector('.headline').textContent = value;
-    this.propertyChangeCallback('headline', value);
+  set headline(arg) {
+    this.root.querySelector('.headline').textContent = arg || '';
+    this.propertyChangeCallback('headline', arg);
   }
 
   /* Returns flag that controls if modal should open. */
@@ -237,15 +233,15 @@ class Modal extends Base {
   }
 
   /* Set flag that controls if modal should open. */
-  set open(value) {
-    this.#open = value;
-    if (value === true) {
+  set open(arg) {
+    this.#open = arg;
+    if (arg === true) {
       this.show();
     }
     else {
       this.style.display = 'none';
     }
-    this.propertyChangeCallback('open', value);
+    this.propertyChangeCallback('open', arg);
   }
 
   /* Returns value of modal (as set via control buttons). */
@@ -258,15 +254,25 @@ class Modal extends Base {
     throw new Error(`Property 'value' is read-only.`);
   }
 
+  /* Returns width of modal. */
+  get width() {
+    return this.getCssVar('width');
+  }
+
+   /* Sets width of modal. */
+  set width(arg) {
+    this.setCssVar('width', arg);
+    this.propertyChangeCallback('width', arg);
+  }
+
   /* Adds control button (to footer). */
   #addButton(text, value, title) {
     const eButton = document.createElement('button');
     eButton.textContent = text;
     eButton.value = value;
-    // 'eButton.value' is string (by implicit conversion). This is taken into account in 'show()' by calling '._interpretAttributeValue()'.
+    // 'eButton.value' is string (by implicit conversion). This is taken into account in 'show()' by calling 'interpretAttributeValue()'.
     title && eButton.setAttribute('title', title);
     this.root.querySelector('footer').append(eButton);
-    
   }
 
   /* Adds multiple control buttons (to footer). */
@@ -286,28 +292,21 @@ class Modal extends Base {
   show() {
     !this.parentElement && document.body.append(this);
     this.style.display = 'initial';
-    // Control buttons may reside in 'button[slot="footer"]' (if added via HTML or with 'addElement' etc.)
-    // or in 'footer' (if added via the 'buttons' property):
+    // Control buttons are buttons with a value in the component's light or shadow DOM.
     const eeControlButtons = [
-      ...this.querySelectorAll('button[slot="footer"]'),
-      ...this.root.querySelectorAll('footer > button')
+      ...this.querySelectorAll('button[value]'),
+      ...this.querySelectorAll('snu-button[value]'),
+      ...this.root.querySelectorAll('button[value]')
     ];
     return new Promise(resolve => {
       eeControlButtons.forEach(element => element.addEventListener('click', event => {
-        // 'event.target.value' is a string, so perform interpretation:
-        this.#value = this.interpretAttributeValue(event.target.value, 'toBoolean', 'toNumber', 'none');
+        // 'event.target.value' is a string, so perform interpretation (relevant if Boolean):
+        this.#value = this.interpretAttributeValue(event.target.value, 'toBoolean');
         this.callback && this.callback(this.#value);
         resolve(this.#value);
         this.closeOnButtonClick && this.remove();
-      })
-      )
-    })
-  }
-
-  /* Event handler for top close button click
-  (called via 'this.#onCloseButtonClickBound()' and added\removed via the 'dismissible' property). */
-  #onCloseButtonClick(event) {
-    this.remove();
+      }));
+    });
   }
 
   /* Event handler for wrapper click

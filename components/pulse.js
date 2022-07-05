@@ -11,7 +11,7 @@ class Pulse extends Base {
   constructor(properties) {
     super();
     this.addPlugins(PluginClick, PluginSlots);
-    this.html = /*html*/ `
+    this.rootHtml = /*html*/ `
     <style>
       :host {
         --dynamicColor: var(--primaryColor100, pink);

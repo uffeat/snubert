@@ -8,13 +8,26 @@ class Base extends HTMLElement {
     });
   }
 
-  /* Returns root html. */
+  /* Returns (light DOM) html. */
   get html() {
+    return this.innerHTML;
+  }
+
+  /* Sets (light DOM) html. */
+  set html(html) {
+    while (this.firstChild) {
+      this.firstChild.remove();
+    }
+    this.innerHTML = html || ''  // To avoid showing 'undefined'.
+  }
+
+  /* Returns shadow root html. */
+  get rootHtml() {
     return this.root.innerHTML;
   }
 
-  /* Sets root html. */
-  set html(html) {
+  /* Sets shadow root html. */
+  set rootHtml(html) {
     while (this.root.firstChild) {
       this.root.firstChild.remove();
     }
@@ -33,17 +46,14 @@ class Base extends HTMLElement {
 
   /* Adds properties of Plugin classes to component (use in component constructor). */
   addPlugins(...Plugins) {
-    // Plugin should be a class without constructor and without (#)private properties.
-    // ... Also, cannot call 'super' to refrence Plugin.
+    // Plugins should be a class without constructor, without (#)private properties, and without reference to 'super'.
+    // NB: In general, use mixins instead (do not have the limitations outlined above).
     Plugins.forEach(Plugin => {
       const ownPropertyDescriptors = Object.getOwnPropertyDescriptors(Plugin.prototype)
       for (const [name, descriptor] of Object.entries(ownPropertyDescriptors)) {
-        if (name !== 'constructor' && name !== '_constructor') {
+        if (name !== 'constructor') {
           Object.defineProperty(this, name, descriptor);
         }
-      }
-      if (Plugin.prototype._constructor) {
-        Plugin.prototype._constructor();
       }
     })
   }
@@ -105,16 +115,17 @@ class Base extends HTMLElement {
   interpretAttributeValue(value, ...interpretations) {
     if (interpretations.includes('toBoolean')) {
       if (value === 'true') {
-        return true
+        return true;
       }
       else if (value === 'false') {
-        return false
+        return false;
       }
       else if (value === 'null') {
-        return null
+        return null;
       }
+      return value;
     }
-    return value
+    return value;
   }
 
   /* Appends component to element. */
@@ -227,7 +238,6 @@ class Base extends HTMLElement {
 }
 
 export { Base };
-
 
 
 /*

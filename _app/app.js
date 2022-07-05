@@ -4,7 +4,18 @@ import { render as renderTop } from './top.js';
 
 // Build UI:
 const cHome = snubert.createComponent('Home', {
-  logo: './images/logo.svg', headline: "Snubert",
+  logo: './images/logo.svg', 
+  headline: "Snubert",
+  states: {
+    'user': function(data) {
+      if (data === true) {
+        this.open();
+      }
+      else {
+        this.close();
+      }
+    }
+  }
 })
 cHome.mount(snubert.eRoot)
 

@@ -5,7 +5,7 @@ import { utilDefine } from './util-define.js';
 class InputText extends Base {
   constructor(properties) {
     super();
-    this.html = /*html*/ `
+    this.rootHtml = /*html*/ `
     <style>
       :host {
         --fontSize: 16px;

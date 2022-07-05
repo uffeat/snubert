@@ -1,11 +1,12 @@
 import { Base } from './base.js';
+import { MixinClick } from './mixin-click.js';
+import { MixinStyles } from './mixin-styles.js';
 import { utilDefine } from './util-define.js';
-import { PluginClick } from './plugin-click.js';
-import { PluginStyles } from './plugin-styles.js';
 import { focus } from '../utils/focus.js';
+import { mixin } from './util-mixin.js';
 
-/* Button component with optional ripple effect. */
-class Button extends Base {
+/* Button component with optional ripple effect and style classes. */
+class Button extends mixin(Base, MixinClick, MixinStyles) {
   #eButton;
   #focusScope;
   #ripple;
@@ -15,8 +16,7 @@ class Button extends Base {
   #setFocusBound = this.#setFocus.bind(this);
   constructor(properties) {
     super();
-    this.addPlugins(PluginClick, PluginStyles);
-    this.html = /*html*/ `
+    this.rootHtml = /*html*/ `
     <style>
       button {
         min-width: 64px;

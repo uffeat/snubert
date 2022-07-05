@@ -59,7 +59,7 @@ class State {
     if (data && shallowFreeze === true) {
       Object.freeze(data)
     }
-     // NB: Complex data objects escape the above freeze ('freeze' is shallow).
+     // NB: Anything but simple data objects escape the above freeze ('freeze' is shallow).
 
     // Update data:
     this.data = data
@@ -122,9 +122,10 @@ class States {
   update(stateName, data, settings) {
     // Create state if does not exist:
     if (!(stateName in this.#states)) {
-      this.#states[stateName] = new State(stateName)
+      this.#states[stateName] = new State(stateName);
     }
-    this.#states[stateName].update(data, settings)
+    this.#states[stateName].update(data, settings);
+    
   }
 
 }

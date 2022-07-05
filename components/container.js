@@ -6,7 +6,7 @@ export class Container extends Base {
   constructor(kwargs = {}) {
     const { cssText, html } = kwargs
     super()
-    this.html = html
+    this.rootHtml = html
     this.addStyles(cssText)
   }
 

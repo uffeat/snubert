@@ -15,11 +15,19 @@ const render = cParent => {
       }
     },
     onClick: event => {
+
+      const cDummyButton = snubert.createComponent('Button', {
+        text: "Dummy",
+        ripple: true,
+        value: null,
+      });
+      cDummyButton.classList.add('primary');
+      console.log(cDummyButton.value)
+      console.log(cDummyButton.getAttribute('value'))
+
       const modal = snubert.modal(
         {
-          headline: "Sign up",
-          content: "Sign-up stuff",
-          buttons: [["OK", true, "Accept"], ["Cancel", false, "Dismiss"]],
+         content: cDummyButton,
           dismissible: false,
         },
         value => {
@@ -36,6 +44,7 @@ const render = cParent => {
   const cLoginLink = snubert.createComponent('Link', {
     focusScope: 'top', 
     text: "Log in",
+    
     states: {
       'user': function(data) {
         if (data === true) {
@@ -46,6 +55,7 @@ const render = cParent => {
         }
       }
     },
+    
     onClick: event => {
       const cUserNameInputText = snubert.createComponent('InputText', {
         prompt: "Email",
@@ -58,11 +68,8 @@ const render = cParent => {
           buttons: [["OK", true, "Accept"], ["Cancel", false, "Dismiss"]],
           dismissible: false,
         },
-        value => {
-          if (value === true) {
-            snubert.states.update('user', true);
-          }
-        }
+        value => snubert.states.update('user', value)
+        
       );
     }
   });
