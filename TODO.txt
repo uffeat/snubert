@@ -1,20 +1,5 @@
-main.css
---------
-- Rename to components.css and move to components.
-- Add from base.js (rather than snubert.js).
-
-
 home.js
 -------
 - Enable adding regular links to side and top. Style via shadow DOM injection.
 
 
-focus.js
---------
-- Move to components and embed in mixin-focus.js. 
-  OK that focus can only be controlled from inside components (from the outside, set via the focus property).
-
-
-Ccomponents in general
-----------------------
-- add mixin and base.

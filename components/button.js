@@ -1,6 +1,6 @@
 import { Base, define, mixin } from './base.js';
-import { MixinClick } from './mixin-click.js';
-import { MixinStyles } from './mixin-styles.js';
+import { MixinClick } from './mixins/mixin-click.js';
+import { MixinStyles } from './mixins/mixin-styles.js';
 
 /* Button component with optional ripple effect and style classes. */
 class Button extends mixin(Base, MixinClick, MixinStyles) {

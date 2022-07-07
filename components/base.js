@@ -1,3 +1,7 @@
+import componentsStylesheet from "./components.css" assert { type: "css" };
+
+document.adoptedStyleSheets = [...document.adoptedStyleSheets, componentsStylesheet];
+
 /* Base class for components. Sets up shadow DOM basics and manages properties <-> attributes sync. */
 class Base extends HTMLElement {
   #root;

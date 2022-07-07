@@ -54,7 +54,7 @@ const MixinSlots = Parent => {
     }
 
     /* Set callback to be invoked whenever nodes are added. Callback arg: Array of added nodes. */
-    setAddedNodesCallback(callback, filterFunction) {
+    addAddedNodesCallback(callback, filterFunction) {
       const observer = new MutationObserver(mutations => {
         mutations.forEach(mutation => {
           let nodes = [...mutation.addedNodes];
@@ -69,7 +69,7 @@ const MixinSlots = Parent => {
     }
 
     /* Set callback to be invoked whenever nodes are removed. Callback arg: Array of removed nodes. */
-    setRemovedNodesCallback(callback, filterFunction) {
+    addRemovedNodesCallback(callback, filterFunction) {
       const observer = new MutationObserver(mutations => {
         mutations.forEach(mutation => {
           let nodes = [...mutation.removedNodes];

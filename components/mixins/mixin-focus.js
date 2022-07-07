@@ -53,7 +53,7 @@ const MixinFocus = Parent => {
     }
   
     set focusScope(arg) {
-      if (arg !== undefined) {
+      if (arg) {
         this.addEventListener('click', this.#setFocusBound);
       }
       else {
@@ -71,4 +71,4 @@ const MixinFocus = Parent => {
 
 }
 
-export { MixinFocus };
+export { MixinFocus, focus };

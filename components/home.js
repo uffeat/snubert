@@ -1,6 +1,7 @@
 import { Base, define, mixin } from './base.js';
-import { MixinSlots } from './mixin-slots.js';
-import { MixinStates } from './mixin-states.js';
+import { MixinSlots } from './mixins/mixin-slots.js';
+import { MixinStates } from './mixins/mixin-states.js';
+import { focus } from './mixins/mixin-focus.js';
 
 class Home extends mixin(Base, MixinSlots, MixinStates) {
   #disabled = false;  // Default can be set here, since no need for initial invokation of setter.
@@ -167,6 +168,29 @@ class Home extends mixin(Base, MixinSlots, MixinStates) {
         flex-direction: column;
       }
 
+      x-side a {
+        box-sizing: border-box;
+        width: 100%;
+        padding: 12px;
+        display: flex;
+        align-items: center;
+        font-family: var(--fontFamily);
+        font-size: 16px;
+        color:  var(--gray800);
+        white-space: nowrap;
+        transition: background-color 200ms, color 200ms;
+      }
+
+      x-side a:hover {
+        background-color: var(--gray100);
+        color: var(--textColorAlt);
+      }
+
+      x-side a.focus {
+        background-color: var(--gray200);
+        color: var(--primaryColor500);
+      }
+
       :host([closed]) x-side {
         transform: translateX(-100%);
       }
@@ -247,17 +271,9 @@ class Home extends mixin(Base, MixinSlots, MixinStates) {
       })
     })
 
-    // Style of link components added to side slot (demo of '_addSlotChangeHandler'):
-    // (::slotted is insufficient)
-    this.addSlotChangeHandler('side', event => {
-      event.target.assignedNodes().forEach(element => {
-        if (element.tagName === 'SNU-LINK') {
-          element.addStyles(this.#getCssText('sideLink'));
-        }
-      })
-    })
 
-    this.setAddedNodesCallback(nodes => {
+
+    this.addAddedNodesCallback(nodes => {
       nodes.forEach(element => {
         const eLine = document.createElement('SPAN');
         eLine.classList.add('line');
@@ -266,6 +282,15 @@ class Home extends mixin(Base, MixinSlots, MixinStates) {
       });
     },
       element => element.tagName === 'SNU-LINK' && element.slot === 'top'
+    );
+
+    this.addAddedNodesCallback(nodes => {
+      nodes.forEach(element => {
+        this.root.querySelector('x-side').append(element);
+        element.addEventListener('click', event => focus.set(event.target));
+      });
+    },
+      element => element.tagName === 'A' && element.getAttribute('inject') === 'side'
     );
 
     this.updateProperties(properties);

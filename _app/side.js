@@ -7,6 +7,16 @@ const render = cParent => {
     }
   })
   cParent.addElement(cDataLink, { slot: 'side' });
+
+
+  const componentsLink = snubert.createElement('a', {textContent: "Stuff"});
+  componentsLink.setAttribute('inject', 'side');
+  componentsLink.addEventListener('click', event => {
+
+  });
+
+  cParent.append(componentsLink);
+
   
   const cComponentsLink = snubert.createComponent('Link', {
     focusScope: 'global', text: "Component examples", onClick: event => {
@@ -38,6 +48,13 @@ const render = cParent => {
     }
   })
   cParent.addElement(cComponentsLink, { slot: 'side' });
+
+
+  const testLink = document.createElement('a');
+  testLink.textContent = "Test link";
+  testLink.setAttribute('inject', 'side');
+  cParent.append(testLink);
+
 }
 
 export { render };

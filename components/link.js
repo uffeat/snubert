@@ -1,9 +1,9 @@
 import { Base, define, mixin } from './base.js';
-import { MixinClick } from './mixin-click.js';
-import { MixinFocus } from './mixin-focus.js';
-import { MixinSlots } from './mixin-slots.js';
-import { MixinStates } from './mixin-states.js';
-import { MixinStyles } from './mixin-styles.js';
+import { MixinClick } from './mixins/mixin-click.js';
+import { MixinFocus } from './mixins/mixin-focus.js';
+import { MixinSlots } from './mixins/mixin-slots.js';
+import { MixinStates } from './mixins/mixin-states.js';
+import { MixinStyles } from './mixins/mixin-styles.js';
 
 class Link extends mixin(Base, MixinClick, MixinFocus, MixinSlots, MixinStates, MixinStyles) {
   #eLink;
