@@ -1,4 +1,4 @@
-import { Base, define, mixin } from './base.js';
+import { Base, define, mixin, pythonize } from './base.js';
 import { MixinSlots } from './mixins/mixin-slots.js';
 
 /* . */
@@ -327,6 +327,7 @@ const modal = async (properties, callback) => {
 }
 
 define(Modal);
+pythonize(Modal);
 
 export { Modal, modal };
 

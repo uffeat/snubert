@@ -1,4 +1,4 @@
-import { Base, define, mixin } from './base.js';
+import { Base, define, mixin, pythonize } from './base.js';
 import { MixinClick } from './mixins/mixin-click.js';
 import { MixinFocus } from './mixins/mixin-focus.js';
 import { MixinSlots } from './mixins/mixin-slots.js';
@@ -53,10 +53,9 @@ class Link extends mixin(Base, MixinClick, MixinFocus, MixinSlots, MixinStates, 
     this.textContent = arg;
   }
 
-  
-
 }
 
 define(Link);
+pythonize(Link);
 
 export { Link };

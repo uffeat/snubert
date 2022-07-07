@@ -1,5 +1,5 @@
+import { pythonize } from "../utils/pythonize.js";
 import componentsStylesheet from "./components.css" assert { type: "css" };
-
 document.adoptedStyleSheets = [...document.adoptedStyleSheets, componentsStylesheet];
 
 /* Base class for components. Sets up shadow DOM basics and manages properties <-> attributes sync. */
@@ -241,7 +241,7 @@ const define = Component => {
   else {
     console.warn(`Custom element '${tagName}' already defined.`)
   }
-  
+
 }
 
 /* Returns a composite class with an inheritance hierarchy derived from Base and Mixin functions. */
@@ -249,14 +249,16 @@ const mixin = (Base, ...Mixins) => {
   let CompositeClass;
   for (let index = 0; index < Mixins.length; index++) {
     if (index === 0) {
-      CompositeClass = Mixins[0](Base)
+      CompositeClass = Mixins[0](Base);
     }
     else {
-      CompositeClass = Mixins[index](CompositeClass)
+      CompositeClass = Mixins[index](CompositeClass);
     }
+    pythonize(CompositeClass);
   }
-  return CompositeClass
+  return CompositeClass;
 }
 
-export { Base, define, mixin };
+pythonize(Base);
 
+export { Base, define, mixin, pythonize };

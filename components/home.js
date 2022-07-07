@@ -1,4 +1,4 @@
-import { Base, define, mixin } from './base.js';
+import { Base, define, mixin, pythonize } from './base.js';
 import { MixinSlots } from './mixins/mixin-slots.js';
 import { MixinStates } from './mixins/mixin-states.js';
 import { focus } from './mixins/mixin-focus.js';
@@ -431,5 +431,6 @@ class Home extends mixin(Base, MixinSlots, MixinStates) {
 }
 
 define(Home);
+pythonize(Home);
 
 export { Home };

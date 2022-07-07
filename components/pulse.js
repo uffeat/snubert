@@ -1,4 +1,4 @@
-import { Base, define, mixin } from './base.js';
+import { Base, define, mixin, pythonize } from './base.js';
 import { MixinClick } from './mixins/mixin-click.js';
 import { MixinSlots } from './mixins/mixin-slots.js';
 
@@ -180,5 +180,6 @@ class Pulse extends mixin(Base, MixinClick, MixinSlots) {
 }
 
 define(Pulse);
+pythonize(Pulse);
 
 export { Pulse };

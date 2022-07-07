@@ -1,4 +1,4 @@
-import { Base, define, mixin } from './base.js';
+import { Base, define, mixin, pythonize } from './base.js';
 import { MixinClick } from './mixins/mixin-click.js';
 import { MixinStyles } from './mixins/mixin-styles.js';
 
@@ -176,5 +176,6 @@ class Button extends mixin(Base, MixinClick, MixinStyles) {
 }
 
 define(Button);
+pythonize(Button);
 
 export { Button };

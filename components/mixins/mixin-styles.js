@@ -10,9 +10,9 @@ const MixinStyles = Parent => {
       // NB: Adopted stylesheets are removed from component when component is removed from the DOM.
       if (cssText) {
         const sheet = new CSSStyleSheet()
-        sheet.replaceSync(cssText)
+        sheet.replaceSync(cssText);
         if (!target.adoptedStyleSheets.includes(sheet)) {
-          target.adoptedStyleSheets = [...target.adoptedStyleSheets, sheet]
+          target.adoptedStyleSheets = [...target.adoptedStyleSheets, sheet];
         }
       }
     }
@@ -21,15 +21,15 @@ const MixinStyles = Parent => {
     addStylesheet(sheet, target = this.root) {
       // NB: Adopted stylesheets are removed from component when component is removed from the DOM.
       if (sheet && !target.adoptedStyleSheets.includes(sheet)) {
-        target.adoptedStyleSheets = [...target.adoptedStyleSheets, sheet]
+        target.adoptedStyleSheets = [...target.adoptedStyleSheets, sheet];
       }
     }
 
     /* Removes CSS classes to ensure that mutually exclusive classes are not added. */
     filterMutuallyExclusiveCssClasses(mutuallyExclusiveClasses) {
-      const conflictingClasses = [...this.classList].filter(c => mutuallyExclusiveClasses.includes(c))
+      const conflictingClasses = [...this.classList].filter(c => mutuallyExclusiveClasses.includes(c));
       if (conflictingClasses.length > 1) {
-        const [classToKeep, ...classesToRemove] = conflictingClasses.reverse()
+        const [classToKeep, ...classesToRemove] = conflictingClasses.reverse();
         console.warn(`The classes '${conflictingClasses.join(', ')}' are mutually exclusive. Only '${classToKeep}' will be applied...`);
         classesToRemove.forEach(c => this.classList.remove(c));
       }

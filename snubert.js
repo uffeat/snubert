@@ -2,6 +2,7 @@ import normalizeStylesheet from "./styles/normalize.css" assert { type: "css" };
 import * as components from './components/all.js';
 import * as utils from './utils/all.js';
 import { states } from './components/mixins/mixin-states.js';
+import { pythonize } from './utils/pythonize.js';
 
 /* Class for the 'snubert' namespace. */
 class Snubert {
@@ -35,10 +36,8 @@ class Snubert {
   }
 
   createElement(tagName, kwargs = {}) {
-    console.log(kwargs)
     const element = document.createElement(tagName)
     for (const [key, value] of Object.entries(kwargs)) {
-      console.log(key, value)
       element[key] = value;
     }
     return element;
@@ -56,14 +55,7 @@ class Snubert {
 
 }
 
+pythonize(Snubert);
+
 const snubert = new Snubert();
 window.snubert = snubert;
-
-/*
-
-Object.assign(document.createElement('a'), {
-    target: '_blank',
-    rel: 'noopener noreferrer',
-    href: href,
-  })
-*/
