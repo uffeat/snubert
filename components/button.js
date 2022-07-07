@@ -1,19 +1,14 @@
-import { Base } from './base.js';
+import { Base, define, mixin } from './base.js';
 import { MixinClick } from './mixin-click.js';
 import { MixinStyles } from './mixin-styles.js';
-import { utilDefine } from './util-define.js';
-import { focus } from '../utils/focus.js';
-import { mixin } from './util-mixin.js';
 
 /* Button component with optional ripple effect and style classes. */
 class Button extends mixin(Base, MixinClick, MixinStyles) {
   #eButton;
-  #focusScope;
   #ripple;
   #value;
   // Bind event handlers (allows removal):
   #addRippleBound = this.#addRipple.bind(this);
-  #setFocusBound = this.#setFocus.bind(this);
   constructor(properties) {
     super();
     this.rootHtml = /*html*/ `
@@ -99,13 +94,12 @@ class Button extends mixin(Base, MixinClick, MixinStyles) {
     </button>
     `;
     this.#eButton = this.root.querySelector('button');
-
     this.updateProperties(properties);
   }
 
   /* Defines attributes to sync with properties. */
   static get observedAttributes() {
-    return ['focus-scope', 'ripple', 'value', 'class'];
+    return  ['ripple', 'value', 'class'];
   }
 
   attributeChangedCallback(attr, oldValue, newValue) {
@@ -113,21 +107,6 @@ class Button extends mixin(Base, MixinClick, MixinStyles) {
     if (attr === 'class') {
       this.filterMutuallyExclusiveCssClasses(['primary', 'secondary']);
     }
-  }
-
-  get focusScope() {
-    return this.#focusScope;
-  }
-
-  set focusScope(arg) {
-    if (arg !== undefined) {
-      this.addEventListener('click', this.#setFocusBound);
-    }
-    else {
-      this.removeEventListener('click', this.#setFocusBound);
-    }
-    this.#focusScope = arg;
-    this.setAttribute('focus-scope', arg);
   }
 
   /* Returns ripple flag. */
@@ -164,7 +143,7 @@ class Button extends mixin(Base, MixinClick, MixinStyles) {
 
   /* . */
   set value(arg) {
-    this.#value = this.interpretToPropertyValue(arg, 'toBoolean');
+    this.#value = this.interpretValue(arg, 'toBoolean');
     this.setAttribute('value', this.#value);
   }
 
@@ -172,7 +151,8 @@ class Button extends mixin(Base, MixinClick, MixinStyles) {
     callback && callback(this.value);
     return new Promise(resolve => {
       this.addEventListener('click', event => {
-        resolve(event.target.value);
+        this.value = event.target.value
+        resolve(this.value);
       })
     })
   }
@@ -193,12 +173,8 @@ class Button extends mixin(Base, MixinClick, MixinStyles) {
     this.#eButton.append(eRipple);
   }
 
-  #setFocus(event) {
-    focus.set(event.target, this.getAttribute('focus-scope'));
-  }
-
 }
 
-utilDefine(Button);
+define(Button);
 
 export { Button };

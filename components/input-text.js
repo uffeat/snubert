@@ -1,5 +1,4 @@
-import { Base } from './base.js';
-import { utilDefine } from './util-define.js';
+import { Base, define } from './base.js';
 
 /* . */
 class InputText extends Base {
@@ -145,6 +144,6 @@ class InputText extends Base {
 
 }
 
-utilDefine(InputText);
+define(InputText);
 
 export { InputText };

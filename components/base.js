@@ -60,6 +60,13 @@ class Base extends HTMLElement {
 
   /* Syncs attribute -> property. */
   attributeChangedCallback(attr, oldValue, newValue) {
+    /* 
+    attribute -> property value interpretation logic:
+    - Added no-value attribute -> set property value to true.
+    - Removed no-value attribute -> set property value to false.
+    - "number sting" attribute value -> set property value number.
+    Any further attribute -> property value interpretation should be done in property setters with 'interpretValue()'.
+    */
     // Abort if no change (prevents infinite loop caused by reflection):
     if (oldValue === newValue) {
       return;
@@ -83,29 +90,6 @@ class Base extends HTMLElement {
       propValue = Number(newValue);
     }
     this.#updateProperty(prop, propValue);
-    // NB: Any further attribute -> property value interpretation should be done in property setters with '_interpretAttributeValue(value, requiredType)'.
-  }
-
-
-  // TODO: Move to mixin.
-  /* . */
-  filterMutuallyExclusiveCssClasses(mutuallyExclusiveClasses) {
-    const conflictingClasses = [...this.classList].filter(c => mutuallyExclusiveClasses.includes(c))
-    if (conflictingClasses.length > 1) {
-      const [classToKeep, ...classesToRemove] = conflictingClasses.reverse()
-      console.warn(`The classes '${conflictingClasses.join(', ')}' are mutually exclusive. Only '${classToKeep}' will be applied...`);
-      classesToRemove.forEach(c => this.classList.remove(c));
-    }
-  }
-
-  /* Returns CSS var of component (:host). Specify without '--'. */
-  getCssVar(cssVar) {
-    return getComputedStyle(this).getPropertyValue(`--${cssVar}`); 
-  }
-
-  /* Sets CSS var of component (:host). Specify without '--'. */
-  setCssVar(cssVar, value) {
-    this.style.setProperty(`--${cssVar}`, value);
   }
 
   /* Hides component */
@@ -113,31 +97,11 @@ class Base extends HTMLElement {
     this.style.display = 'none';
   }
 
-  // TODO: Move to mixin.
-  /* Helper method for property setters. Performs additional attribute value interpretations not handled in 'attributeChangedCallback'. */
-  interpretToAttributeValue(value, ...interpretations) {
-    if (interpretations.includes('fromBoolean') && [true, false, null].includes(value)) {
-      // Perform literal interpretation of Boolean (incl. null):
-      if (value === true) {
-        return 'true';
-      }
-      else if (value === false) {
-        return 'false';
-      }
-      else if (value === null) {
-        return 'null';
-      }
-    }
-    // Default (no) interpretation:
-    return value;
-  }
-
-
-
-  // TODO: Move to mixin.
-  /* Helper method for property setters. Performs additional attribute value interpretations not handled in 'attributeChangedCallback'. */
-  interpretToPropertyValue(value, ...interpretations) {
-    if (interpretations.includes('toBoolean')) {
+  /* Returns an interpreted "version" of 'value' iterpreted according to the 'interpretation' arg. */
+  // Helper method for property setters (for incomming arg and/or before setting correponsding attribute).
+  interpretValue(value, interpretation) {
+    // String -> Boolean, null:
+    if (interpretation === 'toBoolean') {
       if (value === 'true') {
         return true;
       }
@@ -147,7 +111,9 @@ class Base extends HTMLElement {
       else if (value === 'null') {
         return null;
       }
-      return value;
+    }
+    else {
+      throw new Error(`interpretation '${interpretation}' not supported.`);
     }
     return value;
   }
@@ -162,19 +128,17 @@ class Base extends HTMLElement {
     element.append(this);
   }
 
-  /* */
-  setNoValueAttribute(attr, propValue) {
-    if (propValue === true) {
+  /* Sets or removes no-value attribute from Boolean/null/undefined (property) value. */
+  setNoValueAttribute(attr, value) {
+    if (value === true) {
       this.setAttribute(attr, '');
     }
-    else if (!propValue) {  // false/null/undefined.
+    else if (!value) {  // false/null/undefined.
       this.removeAttribute(attr);
     }
-    // Default (no) interpretation:
     else {
-      throw new Error(`Expected Boolean or null. Got '${propValue}';`)
+      throw new Error(`Expected Boolean, null or undefined. Got '${value}';`);
     }
-
   }
 
   /* Shows component. */
@@ -182,11 +146,25 @@ class Base extends HTMLElement {
     this.style.display = 'initial';
   }
 
+  /* Sets attribute from property with automatic name interpretation. */
+  // NB: For convenience; does nothing that 'setAttribute()' and 'setNoValueAttribute()' cannot do.
+  syncAttribute(prop, value, interpretation) {
+    const attr = this.#getObservedAttribute(prop);
+    if (!interpretation) {
+      this.setAttribute(attr, value);
+    }
+    else if (interpretation === 'noValue') {
+      this.setNoValueAttribute(attr, value);
+    }
+    else {
+      throw new Error(`Interpretation '${interpretation}' not implemented.`);
+    }
+  }
+
   /* Updates multiple component properties. */
   updateProperties(properties, defaults) {
     // If 'properties' arg is undefined, make it possible to apply 'defaults'.
     properties = properties || {};
-
     // Update 'properties' with 'defaults' (if any) without overwriting 'properties':
     if (defaults !== undefined) {
       for (const [prop, value] of Object.entries(defaults)) {
@@ -203,14 +181,13 @@ class Base extends HTMLElement {
 
   /* Returns and validates observed attr that correponds to a given property (camel -> kebab). */
   #getObservedAttribute(prop) {
-
-    /* Returns true if character c is upper case or contains an integer; otherwise returns false. */
+    /* Helper function: Returns true if character c is upper case or contains an integer; otherwise returns false. */
     const isUpperOrInt = c => {
       const isUpper = c.charCodeAt(0) >= 65 && c.charCodeAt(0) <= 90;
       const isNumber = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'].includes(c);
       return isUpper || isNumber;
     }
-
+    // Get attribute name by camel -> kebab interpretation:
     const attr = prop.split('').map((c) => isUpperOrInt(c) ? '-' + c.toLowerCase() : c).join('');
     // Verify that attribute is observed:
     if (!this.constructor?.observedAttributes?.includes(attr)) {
@@ -222,8 +199,7 @@ class Base extends HTMLElement {
   /* Updates property if property in component. */
   #updateProperty(prop, value) {
     if (!(prop in this)) {
-      console.info(`Component has no property '${prop}'. Property not set.`);
-      return;
+      console.info(`Component has no property '${prop}'. New simple property will be created.`);
     }
     // Take into account that property could be write-only:
     try {
@@ -231,135 +207,52 @@ class Base extends HTMLElement {
         this[prop] = value;
     }
     catch {
+      // Property is write-only. Update regardless of potential no value change:
       this[prop] = value;
     }
   }
 
 }
 
-export { Base };
-
-
-/*
-interpretAttributeValue(value, ...interpretations) {
-    console.log(typeof value)
-
-    if (interpretations.includes('toBoolean')) {
-      if (value === 'true') {
-        return true
-      }
-      else if (value === 'false') {
-        return false
-      }
-      else if (value === 'null') {
-        return null
-      }
+/* Registers custom element with tag name derived from component class name. */
+const define = Component => {
+  // Custom element tag name prefix (DO NOT CHANGE since tage name may be used for identifiying components):
+  const prefix = 'snu';
+  /* Returns kebab-case representation of Pascal-case string. */
+  const pascalToKebab = pascal => {
+    /* Returns true if character 'c' is either upper case or contains an integer. */
+    const isUpperOrNumber = c => {
+      const isUpper = c.charCodeAt(0) >= 65 && c.charCodeAt(0) <= 90;
+      const isNumber = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'].includes(c)
+      return isUpper || isNumber;
     }
-    else if (interpretations.includes('toStringArray') && Array.isArray(value)) {
-      return value.split(';').map(w => w.trim().toLowerCase()).filter(w => w !== '')
-    }
-    else if (interpretations.includes('toNumber')) {
-      return Number(value);
-    }
-    else if (interpretations.includes('toDate') && (typeof value === 'string' || value instanceof String)) {
-      // TODO!
-      throw new Error(`Date interpretation not yet implemented.`);
-    }
-    // This (non-)interpretation should come last:
-    else if (interpretations.includes('none') && (typeof value === 'string' || value instanceof String)) {
-      return value
-    }
-    // If we get to this point, something went wrong.
-    throw new Error(`Could not interpret value: '${value}' of type '${typeof value}'.`);
+    return pascal.split('').map(
+      (c, i) => isUpperOrNumber(c) && i > 0 ? '-' + c.toLowerCase() : c.toLowerCase()
+    ).join('');
   }
-*/
+  const tagName = prefix + '-' + pascalToKebab(Component.name)
+  if (!customElements.get(tagName)) {
+    customElements.define(tagName, Component)
+  }
+  else {
+    console.warn(`Custom element '${tagName}' already defined.`)
+  }
+  
+}
 
-
-/*
-propertyChangeCallback(prop, value, ...interpretations) {
-    const attr = this.#getObservedAttribute(prop);
-    // No 'interpretations' -> perform default interpretation
-    // (interprets booleans as adding/removing no-value attibutes and explicitly interprets numbers to strings):
-    if (interpretations.length === 0) {
-      if (value === true) {
-        this.setAttribute(attr, '');
-      }
-      else if (!value) {  // false/null/undefined.
-        this.removeAttribute(attr);
-      }
-      else if (typeof value === 'number' || value instanceof Number) {
-        this.setAttribute(attr, value.toString());
-      }
-      else if (typeof value === 'string' || value instanceof String) {
-        this.setAttribute(attr, value);
-      }
-      else {
-        throw new Error(`Cannot interpret property value '${value}' to a suitable value for attribute '${attr}'.`);
-      }
-    }
-    // 'interpretations' passed -> perform special interpretation:
-    else if (interpretations.includes('fromBoolean') && [true, false, null].includes(value)) {
-      // Perform literal interpretation of Boolean (incl. null):
-      if (value === true) {
-        this.setAttribute(attr, 'true');
-      }
-      else if (value === false) {
-        this.setAttribute(attr, 'false');
-      }
-      else if (value === null) {
-        this.setAttribute(attr, 'null');
-      }
-    }
-    else if (interpretations.includes('fromNumber') && Number(value) !== NaN) {
-      this.setAttribute(attr, value.toString());
-    }
-    else if (interpretations.includes('fromStringArray') && Array.isArray(value)) {
-      this.setAttribute(attr, value.map(w => w.trim()).join(';'));
-    }
-    else if (interpretations.includes('fromDate') && (typeof value === 'date' || value instanceof Date)) {
-      this.setAttribute(attr, value.toString());  // TODO: Format date.
-    }
-    // This (non-)interpretation should come last:
-    else if (interpretations.includes('none')) {
-      this.setAttribute(attr, value);
+/* Returns a composite class with an inheritance hierarchy derived from Base and Mixin functions. */
+const mixin = (Base, ...Mixins) => {
+  let CompositeClass;
+  for (let index = 0; index < Mixins.length; index++) {
+    if (index === 0) {
+      CompositeClass = Mixins[0](Base)
     }
     else {
-      throw new Error(`Could not interpret value '${value}' with interpretations '${interpretations}'.`);
+      CompositeClass = Mixins[index](CompositeClass)
     }
   }
-*/
+  return CompositeClass
+}
 
+export { Base, define, mixin };
 
-
-
-/* 
-  updateAttibutes(attributes) {
-    for (const [attr, value] in Object.entries(value)) {
-
-      this.setAttribute(attr, value);
-    }
-
-  }
-
-  getAttibutes(kwargs = {}) {
-    const { observed, noValue } = kwargs;
-    const attributeNames = [...this.attributes];
-
-    console.log(attributeNames)
-
-    if (observed === true) {
-
-    }
-    else if (observed === false) {
-
-    }
-    const attrs = attributeNames.reduce((attrs, attribute) => {
-      attrs[attribute.name] = attribute.value;
-      return attrs;
-    }, {});
-
-
-    console.log(attrs)
-    return attrs
-  }
-  */

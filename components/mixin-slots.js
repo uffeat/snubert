@@ -1,4 +1,4 @@
-/* Component mixin for managing added components. */
+/* Component mixin for managing added elements. */
 const MixinSlots = Parent => {
   return class extends Parent {
     constructor() {
@@ -53,39 +53,30 @@ const MixinSlots = Parent => {
       return [...this.root.querySelectorAll('slot')].map(element => element.name);
     }
 
-    // TODO: Add filter.
     /* Set callback to be invoked whenever nodes are added. Callback arg: Array of added nodes. */
-    setAddedNodesCallback(callback) {
+    setAddedNodesCallback(callback, filterFunction) {
       const observer = new MutationObserver(mutations => {
         mutations.forEach(mutation => {
-          callback([...mutation.addedNodes]);
+          let nodes = [...mutation.addedNodes];
+          if (filterFunction) {
+            nodes = nodes.filter(filterFunction);
+          }
+          callback(nodes);
           observer.disconnect();
         })
       })
       observer.observe(this, { childList: true });
     }
 
-    // TODO: Move to other mixin.
-    /* Set callback to be invoked whenever the component class list is changed. Callback arg: None. */
-    // NB: Alternative: added 'class' to observed attributes and overload attributeChangedCallback.
-    setClassChangeCallback(callback) {
-      const observer = new MutationObserver(mutations => {
-        mutations.forEach(mutation => {
-          if (mutation.attributeName === 'class') {
-            callback();
-          }
-          observer.disconnect();
-        })
-      })
-      observer.observe(this, { attributes: true });
-    }
-
-    // TODO: Add filter.
     /* Set callback to be invoked whenever nodes are removed. Callback arg: Array of removed nodes. */
-    setRemovedNodesCallback(callback) {
+    setRemovedNodesCallback(callback, filterFunction) {
       const observer = new MutationObserver(mutations => {
         mutations.forEach(mutation => {
-          callback([...mutation.removedNodes]);
+          let nodes = [...mutation.removedNodes];
+          if (filterFunction) {
+            nodes = nodes.filter(filterFunction);
+          }
+          callback(nodes);
           observer.disconnect();
         })
       })

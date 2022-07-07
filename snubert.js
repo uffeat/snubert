@@ -29,35 +29,15 @@ class Snubert {
     throw new Error(`Property 'eRoot' is read-only. Use 'setRoot(element)' to set root element.`);
   }
 
-  get source() {
-    if (!this.#source) {
-      console.warn(`Snubert source not set.`);
-    }
-    return this.#source;
-  }
-
-  set source(value) {
-    this.#source = value;
-  }
-
-  get sourceRoot() {
-    if (this.#source) {
-      return this.source.replace('snubert.min.js', '');
-    }
-  }
-
-  set sourceRoot(_) {
-    throw new Error(`Property 'sourceRoot' is read-only.`);
-  }
-
   createComponent(Component, properties, kwargs = {}) {
     return new this.components[Component](properties, kwargs);
   }
 
   setRoot(element) {
     if (!element) {
-      console.info(`Creating root component...`);
-      element = this.createComponent('Root');
+      console.info(`Creating root element...`);
+      element = document.createElement('div');
+      element.id = 'root';
       document.body.append(element);
     }
     this.#eRoot = element;

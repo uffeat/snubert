@@ -1,11 +1,9 @@
-import { Base } from './base.js';
+import { Base, define, mixin } from './base.js';
 import { MixinSlots } from './mixin-slots.js';
 import { MixinStates } from './mixin-states.js';
-import { utilDefine } from './util-define.js';
-import { mixin } from './util-mixin.js'
 
-//class Home extends Base {
-  class Home extends mixin(Base, MixinSlots, MixinStates) {
+class Home extends mixin(Base, MixinSlots, MixinStates) {
+  #disabled = false;  // Default can be set here, since no need for initial invokation of setter.
   constructor(properties) {
     super()
     this.rootHtml = /*html*/ `
@@ -126,7 +124,7 @@ import { mixin } from './util-mixin.js'
         left: 0;
         height: 100vh;
         width: var(--sideWidth);
-        z-index: 10; /* */
+        z-index: var(--zIndex20, 20);
         display: flex;
         flex-direction: column;
         background-color: var(--backgroundColor);
@@ -235,17 +233,17 @@ import { mixin } from './util-mixin.js'
       <h2 class="headline">headline</h2>
       <slot name="side"></slot>
     </x-side>
-    `
+    `;
 
     this.root.querySelectorAll('.close').forEach(element => {
       element.addEventListener('click', event => {
-        this.close()
+        this.close();
       })
     })
 
     this.root.querySelectorAll('.toggle').forEach(element => {
       element.addEventListener('click', event => {
-        this.toggle()
+        this.toggle();
       })
     })
 
@@ -254,20 +252,21 @@ import { mixin } from './util-mixin.js'
     this.addSlotChangeHandler('side', event => {
       event.target.assignedNodes().forEach(element => {
         if (element.tagName === 'SNU-LINK') {
-          element.addStyles(this.#getCssText('sideLink'))
+          element.addStyles(this.#getCssText('sideLink'));
         }
       })
     })
 
     this.setAddedNodesCallback(nodes => {
-      const eeTopLinks = nodes.filter(element => element.tagName === 'SNU-LINK' && element.slot === 'top');
-      eeTopLinks.forEach(element => {
-          const eLine = document.createElement('SPAN')
-          eLine.classList.add('line')
-          element.root.append(eLine)
-          element.addStyles(this.#getCssText('topLink'))
-        });
+      nodes.forEach(element => {
+        const eLine = document.createElement('SPAN');
+        eLine.classList.add('line');
+        element.root.append(eLine);
+        element.addStyles(this.#getCssText('topLink'));
       });
+    },
+      element => element.tagName === 'SNU-LINK' && element.slot === 'top'
+    );
 
     this.updateProperties(properties);
   }
@@ -277,19 +276,24 @@ import { mixin } from './util-mixin.js'
   }
 
   get closed() {
+    // No need for private property since setter does not perform any actions (other than setting attribute).
     return this.hasAttribute('closed');
   }
 
   set closed(arg) {
+    // No need for private property since setter does not perform any actions (other than setting attribute).
     this.setNoValueAttribute('closed', arg);
   }
 
   get disabled() {
-    return this.hasAttribute('disabled');
+    return this.#disabled;
   }
 
   set disabled(arg) {
-    this.close();
+    this.#disabled = arg;
+    if (arg === true) {
+      this.close();
+    }
     this.setNoValueAttribute('disabled', arg);
   }
 
@@ -323,7 +327,7 @@ import { mixin } from './util-mixin.js'
     this.closed = !this.closed;
   }
 
-  /* REturns CSS (for added elements). */
+  /* Returns CSS (for added elements). */
   #getCssText(key) {
     // style tags in cssText is just a hack to apply linting via the VS Code 'es6-string-html' extension; 
     // tags are removed in return value.
@@ -401,6 +405,6 @@ import { mixin } from './util-mixin.js'
 
 }
 
-utilDefine(Home);
+define(Home);
 
 export { Home };

@@ -1,10 +1,7 @@
-import { Base } from './base.js';
+import { Base, define, mixin } from './base.js';
 import { MixinSlots } from './mixin-slots.js';
-import { utilDefine } from './util-define.js';
-import { mixin } from './util-mixin.js'
 
 /* . */
-
 class Modal extends mixin(Base, MixinSlots) {
   #callback;
   #closeOnButtonClick = true;
@@ -270,7 +267,7 @@ class Modal extends mixin(Base, MixinSlots) {
     const eButton = document.createElement('button');
     eButton.textContent = text;
     eButton.value = value;
-    // 'eButton.value' is string (by implicit conversion). This is taken into account in 'show()' by calling 'interpretAttributeValue()'.
+    // 'eButton.value' is always a string (by implicit conversion). This is taken into account in 'show()' by calling 'interpretValue()'.
     title && eButton.setAttribute('title', title);
     this.root.querySelector('footer').append(eButton);
   }
@@ -301,7 +298,7 @@ class Modal extends mixin(Base, MixinSlots) {
     return new Promise(resolve => {
       eeControlButtons.forEach(element => element.addEventListener('click', event => {
         // 'event.target.value' is a string, so perform interpretation (relevant if Boolean):
-        this.#value = this.interpretToPropertyValue(event.target.value, 'toBoolean');
+        this.#value = this.interpretValue(event.target.value, 'toBoolean');
         this.callback && this.callback(this.#value);
         resolve(this.#value);
         this.closeOnButtonClick && this.remove();
@@ -329,7 +326,7 @@ const modal = async (properties, callback) => {
   return value;
 }
 
-utilDefine(Modal);
+define(Modal);
 
 export { Modal, modal };
 

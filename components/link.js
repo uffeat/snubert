@@ -1,49 +1,28 @@
-import { Base } from './base.js';
+import { Base, define, mixin } from './base.js';
 import { MixinClick } from './mixin-click.js';
+import { MixinFocus } from './mixin-focus.js';
 import { MixinSlots } from './mixin-slots.js';
 import { MixinStates } from './mixin-states.js';
 import { MixinStyles } from './mixin-styles.js';
-import { utilDefine } from './util-define.js';
-import { focus } from '../utils/focus.js';
-import { mixin } from './util-mixin.js';
 
-class Link extends mixin(Base, MixinClick, MixinSlots, MixinStates, MixinStyles) {
+class Link extends mixin(Base, MixinClick, MixinFocus, MixinSlots, MixinStates, MixinStyles) {
   #eLink;
-  #eText;
-  #focusScope;
-  // Bind event handlers (allows removal):
-  #setFocusBound = this.#setFocus.bind(this);
   constructor(properties) {
     super();
     this.rootHtml = /*html*/ `
-    <style>
-    </style>
-    <a>
-      <slot></slot>
-    </a>
-    `;
+  <style>
+  </style>
+  <a>
+    <slot></slot>
+  </a>
+  `;
     this.#eLink = this.root.querySelector('a');
-
     this.updateProperties(properties);
   }
 
+  /* Defines attributes to sync with properties. */
   static get observedAttributes() {
     return ['focus-scope', 'href', 'target'];
-  }
-
-  get focusScope() {
-    return this.#focusScope;
-  }
-
-  set focusScope(arg) {
-    if (arg !== undefined) {
-      this.addEventListener('click', this.#setFocusBound);
-    }
-    else {
-      this.removeEventListener('click', this.#setFocusBound);
-    }
-    this.#focusScope = arg
-    this.setAttribute('focus-scope', arg);
   }
 
   get href() {
@@ -74,12 +53,10 @@ class Link extends mixin(Base, MixinClick, MixinSlots, MixinStates, MixinStyles)
     this.textContent = arg;
   }
 
-  #setFocus(event) {
-    focus.set(event.target, this.getAttribute('focus-scope'));
-  }
+  
 
 }
 
-utilDefine(Link);
+define(Link);
 
 export { Link };

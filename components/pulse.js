@@ -1,13 +1,9 @@
-import { Base } from './base.js';
+import { Base, define, mixin } from './base.js';
 import { MixinClick } from './mixin-click.js';
 import { MixinSlots } from './mixin-slots.js';
-import { mixin } from './util-mixin.js';
-import { utilDefine } from './util-define.js';
 
 /* Component for marking. */
 class Pulse extends mixin(Base, MixinClick, MixinSlots) {
-  #eDynamic;
-  #eStatic;
   #on;
   constructor(properties) {
     super();
@@ -77,8 +73,7 @@ class Pulse extends mixin(Base, MixinClick, MixinSlots) {
       <span class="dynamic"></span>
     </div>
     `;
-    this.#eStatic = this.root.querySelector('.static');
-    this.#eDynamic = this.root.querySelector('.dynamic');
+
     this.updateProperties(properties);
   }
 
@@ -184,6 +179,6 @@ class Pulse extends mixin(Base, MixinClick, MixinSlots) {
 
 }
 
-utilDefine(Pulse);
+define(Pulse);
 
 export { Pulse };
