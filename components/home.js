@@ -305,8 +305,6 @@ class Home extends mixin(Base, MixinSlots) {
     this.closed = !this.closed;
   }
 
-
-
 }
 
 define(Home);

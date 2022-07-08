@@ -14,19 +14,22 @@
 <body>
   <div id="root">
     <snu-home headline="Snubert" logo="./images/logo.svg">
+      <!-- side links: -->
       <a id="buttonLink" class="home-side" slot="side">Button</a>
-
+      <a id="pulseLink" class="home-side" slot="side">Pulse</a>
+      <!-- top links: -->
+      <a id="signupLink" class="home-top" slot="top">
+        Sign up
+        <span class="line"></span>
+      </a>
       <a id="loginLink" class="home-top" slot="top">
         Log in
         <span class="line"></span>
       </a>
-
       <a id="logoutLink" class="home-top" slot="top">
         Log out
         <span class="line"></span>
       </a>
-
-
     </snu-home>
   </div>
 

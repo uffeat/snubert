@@ -94,6 +94,7 @@ class Button extends mixin(Base, MixinClick, MixinStyles) {
     </button>
     `;
     this.#eButton = this.root.querySelector('button');
+    this.noSyncAttributes = ['class'];
     this.updateProperties(properties);
   }
 

@@ -4,19 +4,17 @@ import * as utils from './utils/all.js';
 import { focus } from './components/mixins/mixin-focus.js';
 import { states } from './components/mixins/mixin-states.js';
 import { pythonize } from './utils/pythonize.js';
+import { ModalContent } from './components/modal-content.js';
 
 /* Class for the 'snubert' namespace. */
 class Snubert {
   #root;
-  #source;
   constructor() {
     document.adoptedStyleSheets = [...document.adoptedStyleSheets, normalizeStylesheet]
-
     this.components = components;
-    this.modal = components.modal;
     this.focus = focus;
     this.states = states;
-
+    // Add utility functions:
     for (const [prop, value] of Object.entries(utils)) {
       this[prop] = value;
     }
@@ -31,6 +29,24 @@ class Snubert {
 
   set root(_) {
     throw new Error(`Property 'root' is read-only. Use 'setRoot(element)' to set root element.`);
+  }
+
+  modal({ buttons, callback, headline }) {
+    const cModal = this.createComponent('Modal');
+    const cModalContent = new ModalContent({ buttons, headline })
+    cModal.append(cModalContent)
+    cModal.show();
+
+    return new Promise(resolve => {
+      const eeControlButtons = cModalContent.root.querySelectorAll('button.control')
+      eeControlButtons.forEach(element => element.addEventListener('click', event => {
+        let value = event.target._value;
+        console.log(value)
+        cModal.hide();
+        callback && callback(value);
+        resolve(value);
+      }));
+    });
   }
 
   createComponent(Component, properties) {

@@ -64,6 +64,9 @@ class Base extends HTMLElement {
 
   /* Syncs attribute -> property. */
   attributeChangedCallback(attr, oldValue, newValue) {
+    if (this.noSyncAttributes?.includes(attr)) {
+      return
+    }
     /* 
     attribute -> property value interpretation logic:
     - Added no-value attribute -> set property value to true.
@@ -215,7 +218,6 @@ class Base extends HTMLElement {
       this[prop] = value;
     }
   }
-
 }
 
 /* Registers custom element with tag name derived from component class name. */
