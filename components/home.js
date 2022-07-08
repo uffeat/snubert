@@ -90,6 +90,39 @@ class Home extends mixin(Base, MixinSlots, MixinStates) {
         justify-content: flex-end;
       }
 
+      header nav.top a {
+        position: relative;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: var(--fontFamily);
+        font-size: 16px;
+        color: white; 
+        white-space: nowrap;
+        padding: 0 8px;
+        transition: background-color 200ms;
+      }
+
+      header nav.top a:hover {
+        background-color: var(--primaryColor500);
+      }
+
+      header nav.top a .line {
+        position: absolute;
+        top: calc(100% - 2px);
+        display: inline-block;
+        width: 100%;
+        height: 2px;
+        background-color: white;
+        transform: scale(0);
+        transition: transform 200ms;
+      }
+
+      header nav.top a.focus .line {
+        transform: scale(1);
+      }
+
       x-page {
         display: flex;
         flex-direction: column;
@@ -100,7 +133,7 @@ class Home extends mixin(Base, MixinSlots, MixinStates) {
         overflow-y: auto;
       }
 
-      main {
+      x-page main {
         /* Stretch down to footer: */
         flex-grow: 1;
         display: flex;
@@ -108,7 +141,7 @@ class Home extends mixin(Base, MixinSlots, MixinStates) {
         align-items: center;
       }
 
-      footer {
+      x-page footer {
         width: 100%;
         display: flex;
         justify-content: center;
@@ -271,26 +304,27 @@ class Home extends mixin(Base, MixinSlots, MixinStates) {
       })
     })
 
-
-
+    // Handle added top links:
     this.addAddedNodesCallback(nodes => {
       nodes.forEach(element => {
         const eLine = document.createElement('SPAN');
         eLine.classList.add('line');
-        element.root.append(eLine);
-        element.addStyles(this.#getCssText('topLink'));
+        element.append(eLine);
+        element.addEventListener('click', event => focus.set(event.target), 'top');
+        this.root.querySelector('header nav.top').append(element);
       });
     },
-      element => element.tagName === 'SNU-LINK' && element.slot === 'top'
+    element => element.getAttribute('inject') === 'top'
     );
 
+    // Handle added side links:
     this.addAddedNodesCallback(nodes => {
       nodes.forEach(element => {
-        this.root.querySelector('x-side').append(element);
         element.addEventListener('click', event => focus.set(event.target));
+        this.root.querySelector('x-side').append(element);
       });
     },
-      element => element.tagName === 'A' && element.getAttribute('inject') === 'side'
+      element => element.getAttribute('inject') === 'side'
     );
 
     this.updateProperties(properties);
@@ -352,81 +386,7 @@ class Home extends mixin(Base, MixinSlots, MixinStates) {
     this.closed = !this.closed;
   }
 
-  /* Returns CSS (for added elements). */
-  #getCssText(key) {
-    // style tags in cssText is just a hack to apply linting via the VS Code 'es6-string-html' extension; 
-    // tags are removed in return value.
-    const cssTexts = {
-      sideLink: /*html*/ `<style>
-      a {
-        box-sizing: border-box;
-        width: 100%;
-        padding: 12px;
-        display: flex;
-        align-items: center;
-        font-family: var(--fontFamily);
-        font-size: 16px;
-        color:  var(--gray800);
-        white-space: nowrap;
-        transition: background-color 200ms, color 200ms;
-      }
 
-      a:hover {
-        background-color: var(--gray100);
-        color: var(--textColorAlt);
-      }
-
-      :host(.focus) a {
-        background-color: var(--gray200);
-        color: var(--primaryColor500);
-      }
-      </style>`,
-
-      topLink: /*html*/ `<style>
-      :host {
-        position: relative;
-      }
-      
-      a {
-        height: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-family: var(--fontFamily);
-        font-size: 16px;
-        color: white; 
-        white-space: nowrap;
-        padding: 0 8px;
-        transition: background-color 200ms;
-      }
-
-      a:hover {
-        background-color: var(--primaryColor500);
-      }
-
-      .line {
-        position: absolute;
-        top: calc(100% - 2px);
-        display: inline-block;
-        width: 100%;
-        height: 2px;
-        background-color: white;
-        transform: scale(0);
-        transition: transform 200ms;
-      }
-
-      :host(.focus) .line {
-        transform: scale(1);
-      }
-
-      </style>
-      `
-    }
-    if (!(key in cssTexts)) {
-      throw new Error(`Invalid key: '${key}'.`);
-    }
-    return cssTexts[key].replace('<style>', '').replace('</style>', '');
-  }
 
 }
 

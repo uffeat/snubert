@@ -31,7 +31,7 @@ renderTop(cHome)
 
 
 
-
+/*
 const cButton1 = snubert.createComponent('Button', {text: "My button"});
 cHome.addElement(cButton1, {slot: 'main'});
 
@@ -45,6 +45,7 @@ console.log(cButton1.value);
 cButton1.value = false
 console.log(cButton1.getAttribute('value'));
 console.log(cButton1.value);
+*/
 
 
 

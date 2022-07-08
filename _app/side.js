@@ -1,4 +1,29 @@
-const render = cParent => {
+const render = parent => {
+
+  const container = document.createElement('div');
+  container.innerHTML = /*html*/ `
+  <a class="get-data" inject="side">Get data</a>
+  
+  `;
+
+  container.querySelector(`.get-data`).addEventListener('click', event => {
+    snubert.getData('key=key-1', data => {
+      console.log(`Data : ${JSON.stringify(data)}`);
+    });
+  });
+
+  container.setAttribute('inject', 'side');
+
+
+  parent.append(container);
+
+
+
+
+
+
+
+  /*
   const cDataLink = snubert.createComponent('Link', {
     focusScope: 'global', text: "Get data", onClick: event => {
       snubert.getData('key=key-1', data => {
@@ -54,6 +79,7 @@ const render = cParent => {
   testLink.textContent = "Test link";
   testLink.setAttribute('inject', 'side');
   cParent.append(testLink);
+  */
 
 }
 

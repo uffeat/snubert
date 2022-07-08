@@ -1,111 +1,110 @@
 const render = cParent => {
 
-  
-  const cSignupLink = snubert.createComponent('Link', {
-    focusScope: 'top', 
-    text: "Sign up",
-    states: {
-      'user': function(data) {
-        if (data === true) {
-          this.hide();
-        }
-        if (data === false) {
-          this.show();
+  // Sign-up link:
+
+  const signupLink = snubert.createElement('a', { textContent: "Sign up" });
+
+  signupLink.setAttribute('inject', 'top');
+
+  signupLink.addEventListener('click', event => {
+
+    const modal = snubert.modal(
+      {
+        headline: "Sign up",
+        content: "Sign-up stuff",
+        buttons: [["OK", true, "Accept"], ["Cancel", false, "Dismiss"]],
+        dismissible: false,
+      },
+      value => {
+        if (value === true) {
+          snubert.states.update('user', true);
         }
       }
-    },
-    onClick: event => {
+    );
 
-      const cDummyButton = snubert.createComponent('Button', {
-        text: "Dummy",
-        ripple: true,
-        value: null,
-      });
-      cDummyButton.classList.add('primary');
-      console.log(cDummyButton.value)
-      console.log(cDummyButton.getAttribute('value'))
-
-      const modal = snubert.modal(
-        {
-         content: cDummyButton,
-          dismissible: false,
-        },
-        value => {
-          if (value === true) {
-            snubert.states.update('user', true);
-          }
-        }
-      );
-    }
   });
-  cParent.addElement(cSignupLink, { slot: 'top' });
-  
 
-  const cLoginLink = snubert.createComponent('Link', {
-    focusScope: 'top', 
-    text: "Log in",
-    
-    states: {
-      'user': function(data) {
-        if (data === true) {
-          this.hide();
-        }
-        if (data === false) {
-          this.show();
+  snubert.states.addSubscriber('user', data => {
+    if (data !== null) {
+      signupLink.style.display = 'none';
+    }
+    else {
+      signupLink.style.display = 'flex';
+    }
+  })
+
+  cParent.append(signupLink);
+
+  // Log-in link:
+
+  const loginLink = snubert.createElement('a', { textContent: "Log in" });
+
+  loginLink.setAttribute('inject', 'top');
+
+  loginLink.addEventListener('click', event => {
+
+    const modal = snubert.modal(
+      {
+        headline: "Log in",
+        content: "Log-in stuff",
+        buttons: [["OK", true, "Accept"], ["Cancel", false, "Dismiss"]],
+        dismissible: false,
+      },
+      value => {
+        if (value === true) {
+          snubert.states.update('user', true);
         }
       }
-    },
-    
-    onClick: event => {
-      const cUserNameInputText = snubert.createComponent('InputText', {
-        prompt: "Email",
-        required: true,
-      });
-      const modal = snubert.modal(
-        {
-          headline: "Log in",
-          content: cUserNameInputText,
-          buttons: [["OK", true, "Accept"], ["Cancel", false, "Dismiss"]],
-          dismissible: false,
-        },
-        value => snubert.states.update('user', value)
-        
-      );
-    }
-  });
-  cParent.addElement(cLoginLink, { slot: 'top' });
+    );
 
-  const cLogoutLink = snubert.createComponent('Link', {
-    focusScope: 'top',
-    text: "Log out",
-    states: {
-      'user': function(data) {
-        if (data === true) {
-          cLogoutLink.show();
-        }
-        if (data === false) {
-          cLogoutLink.hide();
+  });
+
+  snubert.states.addSubscriber('user', data => {
+    if (data !== null) {
+      loginLink.style.display = 'none';
+    }
+    else {
+      loginLink.style.display = 'flex';
+    }
+  })
+
+  cParent.append(loginLink);
+
+  // Log-out link:
+
+  const logoutLink = snubert.createElement('a', { textContent: "Log out" });
+
+  logoutLink.setAttribute('inject', 'top');
+
+  logoutLink.addEventListener('click', event => {
+
+    const modal = snubert.modal(
+      {
+        headline: "Log out",
+        content: "Do you wish to log out?",
+        buttons: [["Yes", true, "Log out"], ["No", false, "Do not log out"]],
+        dismissible: false,
+      },
+      value => {
+        if (value === true) {
+          snubert.states.update('user', null);
         }
       }
-    },
-    onClick: event => {
-      const modal = snubert.modal(
-        {
-          headline: "Log out",
-          content: "Do you wish to log out?",
-          buttons: [["Yes", true, "Log out"], ["No", false, "Do not log out"]],
-          dismissible: false,
-        },
-        value => {
-          if (value === true) {
-            snubert.states.update('user', false);
-          }
-        }
-      );
-    }
+    );
+
   });
-  cLogoutLink.hide();
-  cParent.addElement(cLogoutLink, { slot: 'top' });
+
+  snubert.states.addSubscriber('user', data => {
+    if (data !== null) {
+      logoutLink.style.display = 'flex';
+    }
+    else {
+      logoutLink.style.display = 'none';
+    }
+  })
+
+  cParent.append(logoutLink);
+
 
 }
 
