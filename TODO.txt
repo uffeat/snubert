@@ -1,5 +1,0 @@
-home.js
--------
-- Enable adding regular links to side and top. Style via shadow DOM injection.
-
-
