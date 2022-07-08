@@ -11,8 +11,14 @@ class ModalContent extends mixin(Base, MixinSlots) {
     this.rootHtml = /*html*/ `
     <style>
       :host {
-       height: 100%;
-       background: pink;
+        height: 100%;
+      }
+
+      x-wrapper {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        background: pink;
       }
 
       header {
@@ -88,21 +94,23 @@ class ModalContent extends mixin(Base, MixinSlots) {
         background-color: var(--primaryColor100, pink);
       }
     </style>
-    <header>
-      <h3 class="headline"></h3>
-      <button value="null" title="Dismiss" class="control">
-        <svg viewBox="0 0 24 24">
-          <path
-            d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z" />
-        </svg>
-      </button>
-    </header>
-    <main>
-      <p class="text"></p>
-      <slot></slot>
-    </main>
-    <footer>
-    </footer>
+    <x-wrapper>
+      <header>
+        <h3 class="headline"></h3>
+        <button value="null" title="Dismiss" class="control">
+          <svg viewBox="0 0 24 24">
+            <path
+              d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z" />
+          </svg>
+        </button>
+      </header>
+      <main>
+        <p class="text"></p>
+        <slot></slot>
+      </main>
+      <footer>
+      </footer>
+    </x-wrapper>
     `;
     this.updateProperties(properties);
   }

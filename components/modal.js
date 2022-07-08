@@ -13,6 +13,7 @@ class Modal extends mixin(Base, MixinSlots) {
     <style>
       :host {
         z-index: var(--zIndexMax, 99);
+        /* Use var for width since used in calcs: */
         --width: 400px;
       }
 
