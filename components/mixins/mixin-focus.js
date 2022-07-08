@@ -14,7 +14,7 @@ class Focus {
   }
 
   reset(scope = 'global') {
-    this.get(scope) && this.get(scope).classList.remove('focus');
+    this.getFocusElement(scope) && this.get(scope).classList.remove('focus');
     this.#elements[scope] = null;
   }
 

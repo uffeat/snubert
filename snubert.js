@@ -1,18 +1,20 @@
 import normalizeStylesheet from "./styles/normalize.css" assert { type: "css" };
 import * as components from './components/all.js';
 import * as utils from './utils/all.js';
+import { focus } from './components/mixins/mixin-focus.js';
 import { states } from './components/mixins/mixin-states.js';
 import { pythonize } from './utils/pythonize.js';
 
 /* Class for the 'snubert' namespace. */
 class Snubert {
-  #eRoot;
+  #root;
   #source;
   constructor() {
     document.adoptedStyleSheets = [...document.adoptedStyleSheets, normalizeStylesheet]
 
     this.components = components;
     this.modal = components.modal;
+    this.focus = focus;
     this.states = states;
 
     for (const [prop, value] of Object.entries(utils)) {
@@ -20,15 +22,15 @@ class Snubert {
     }
   }
 
-  get eRoot() {
-    if (!this.#eRoot) {
+  get root() {
+    if (!this.#root) {
       throw new Error(`Snubert root element not set. Use 'setRoot(element)' to set root element.`);
     }
-    return this.#eRoot;
+    return this.#root;
   }
 
-  set eRoot(_) {
-    throw new Error(`Property 'eRoot' is read-only. Use 'setRoot(element)' to set root element.`);
+  set root(_) {
+    throw new Error(`Property 'root' is read-only. Use 'setRoot(element)' to set root element.`);
   }
 
   createComponent(Component, properties) {
@@ -50,7 +52,7 @@ class Snubert {
       element.id = 'root';
       document.body.append(element);
     }
-    this.#eRoot = element;
+    this.#root = element;
   }
 
 }

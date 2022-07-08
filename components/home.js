@@ -1,9 +1,7 @@
 import { Base, define, mixin, pythonize } from './base.js';
 import { MixinSlots } from './mixins/mixin-slots.js';
-import { MixinStates } from './mixins/mixin-states.js';
-import { focus } from './mixins/mixin-focus.js';
 
-class Home extends mixin(Base, MixinSlots, MixinStates) {
+class Home extends mixin(Base, MixinSlots) {
   #disabled = false;  // Default can be set here, since no need for initial invokation of setter.
   constructor(properties) {
     super()
@@ -90,39 +88,6 @@ class Home extends mixin(Base, MixinSlots, MixinStates) {
         justify-content: flex-end;
       }
 
-      header nav.top a {
-        position: relative;
-        height: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-family: var(--fontFamily);
-        font-size: 16px;
-        color: white; 
-        white-space: nowrap;
-        padding: 0 8px;
-        transition: background-color 200ms;
-      }
-
-      header nav.top a:hover {
-        background-color: var(--primaryColor500);
-      }
-
-      header nav.top a .line {
-        position: absolute;
-        top: calc(100% - 2px);
-        display: inline-block;
-        width: 100%;
-        height: 2px;
-        background-color: white;
-        transform: scale(0);
-        transition: transform 200ms;
-      }
-
-      header nav.top a.focus .line {
-        transform: scale(1);
-      }
-
       x-page {
         display: flex;
         flex-direction: column;
@@ -199,29 +164,6 @@ class Home extends mixin(Base, MixinSlots, MixinStates) {
       x-side slot[name="side"] {
         display: flex;
         flex-direction: column;
-      }
-
-      x-side a {
-        box-sizing: border-box;
-        width: 100%;
-        padding: 12px;
-        display: flex;
-        align-items: center;
-        font-family: var(--fontFamily);
-        font-size: 16px;
-        color:  var(--gray800);
-        white-space: nowrap;
-        transition: background-color 200ms, color 200ms;
-      }
-
-      x-side a:hover {
-        background-color: var(--gray100);
-        color: var(--textColorAlt);
-      }
-
-      x-side a.focus {
-        background-color: var(--gray200);
-        color: var(--primaryColor500);
       }
 
       :host([closed]) x-side {
@@ -303,29 +245,6 @@ class Home extends mixin(Base, MixinSlots, MixinStates) {
         this.toggle();
       })
     })
-
-    // Handle added top links:
-    this.addAddedNodesCallback(nodes => {
-      nodes.forEach(element => {
-        const eLine = document.createElement('SPAN');
-        eLine.classList.add('line');
-        element.append(eLine);
-        element.addEventListener('click', event => focus.set(event.target), 'top');
-        this.root.querySelector('header nav.top').append(element);
-      });
-    },
-    element => element.getAttribute('inject') === 'top'
-    );
-
-    // Handle added side links:
-    this.addAddedNodesCallback(nodes => {
-      nodes.forEach(element => {
-        element.addEventListener('click', event => focus.set(event.target));
-        this.root.querySelector('x-side').append(element);
-      });
-    },
-      element => element.getAttribute('inject') === 'side'
-    );
 
     this.updateProperties(properties);
   }

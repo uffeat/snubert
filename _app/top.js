@@ -2,9 +2,7 @@ const render = cParent => {
 
   // Sign-up link:
 
-  const signupLink = snubert.createElement('a', { textContent: "Sign up" });
-
-  signupLink.setAttribute('inject', 'top');
+  const signupLink = snubert.createElement('a', { slot: 'top', textContent: "Sign up" });
 
   signupLink.addEventListener('click', event => {
 
@@ -37,9 +35,7 @@ const render = cParent => {
 
   // Log-in link:
 
-  const loginLink = snubert.createElement('a', { textContent: "Log in" });
-
-  loginLink.setAttribute('inject', 'top');
+  const loginLink = snubert.createElement('a', { slot: 'top', textContent: "Log in" });
 
   loginLink.addEventListener('click', event => {
 
@@ -72,9 +68,7 @@ const render = cParent => {
 
   // Log-out link:
 
-  const logoutLink = snubert.createElement('a', { textContent: "Log out" });
-
-  logoutLink.setAttribute('inject', 'top');
+  const logoutLink = snubert.createElement('a', { slot: 'top', textContent: "Log out" });
 
   logoutLink.addEventListener('click', event => {
 
