@@ -19,9 +19,7 @@ class Base extends HTMLElement {
 
   /* Sets (light DOM) html. */
   set html(html) {
-    while (this.firstChild) {
-      this.firstChild.remove();
-    }
+    this.clearHtml();
     this.innerHTML = html || ''  // To avoid showing 'undefined'.
   }
 
@@ -97,6 +95,13 @@ class Base extends HTMLElement {
       propValue = Number(newValue);
     }
     this.#updateProperty(prop, propValue);
+  }
+
+  /* Clears component's ligth DOM HTML. */
+  clearHtml() {
+    while (this.firstChild) {
+      this.firstChild.remove();
+    }
   }
 
   /* Hides component */

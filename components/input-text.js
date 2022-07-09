@@ -113,7 +113,7 @@ class InputText extends Base {
   }
 
   static get observedAttributes() {
-    return ['message', 'prompt', 'required',];
+    return ['message', 'prompt', 'required'];
   }
 
   get message() {
