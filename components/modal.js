@@ -1,7 +1,7 @@
 import { Base, define, mixin, pythonize } from './base.js';
 import { MixinSlots } from './mixins/mixin-slots.js';
 
-/* . */
+/* Bare-bones modal component. */
 class Modal extends mixin(Base, MixinSlots) {
   #dismissible;
   #open;
@@ -32,8 +32,6 @@ class Modal extends mixin(Base, MixinSlots) {
         top: max(30%, 100px);
         left: calc(50% - var(--width)/2);
         width: 400px;
-        
-        height: 120px;
         z-index: var(--zIndexMax, 99);
         
         display: flex;

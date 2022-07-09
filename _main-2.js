@@ -1,7 +1,20 @@
 // Initialize the snubert namespace:
 import * as _ from './snubert.js';
+//import { getFormHtml } from './xcomps/xform.js';
+import { getLabel } from './xcomps/label.js';
+
+
+document.getElementById('root').append(getLabel())
+
 
 snubert.theme.setTheme({ basic: 'light1', primary: 'brown', secondary: 'deepOrange' });
+
+
+
+
+
+
+/*
 
 const home = document.querySelector('snu-home');
 
@@ -11,8 +24,10 @@ const signupLink = document.getElementById('signupLink');
 signupLink.addEventListener('click', event => {
   snubert.focus.set(event.target, 'top');
   snubert.modal({
-    headline: "Sign up", 
-    buttons: [["OK", true, "Accept"], ["Cancel", false, "Dismiss"]]
+    headline: "Sign up",
+    text: "Sign up?",
+    buttons: [["OK", true, "Accept"], ["Cancel", false, "Dismiss"]],
+    dismissible: true,
   })
   .then(value => snubert.states.update('user', value));
 });
@@ -75,3 +90,4 @@ snubert.states.addSubscriber('page', data => {
     home.insertAdjacentHTML('beforeend', data);
   }
 });
+*/

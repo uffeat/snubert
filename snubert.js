@@ -31,9 +31,9 @@ class Snubert {
     throw new Error(`Property 'root' is read-only. Use 'setRoot(element)' to set root element.`);
   }
 
-  modal({ buttons, callback, headline }) {
-    const cModal = this.createComponent('Modal');
-    const cModalContent = new ModalContent({ buttons, headline })
+  modal({ buttons, callback, dismissible = false, headline, text }) {
+    const cModal = this.createComponent('Modal', {dismissible});
+    const cModalContent = new ModalContent({ buttons, dismissible, headline, text })
     cModal.append(cModalContent)
     cModal.show();
 

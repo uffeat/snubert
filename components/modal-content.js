@@ -4,21 +4,17 @@ import { MixinSlots } from './mixins/mixin-slots.js';
 /* . */
 class ModalContent extends mixin(Base, MixinSlots) {
   #buttons;
+  #dismissible;
   #headline;
   #text;
   constructor(properties) {
     super();
     this.rootHtml = /*html*/ `
     <style>
-      :host {
-        height: 100%;
-      }
-
       x-wrapper {
-        height: 100%;
+        min-height: 120px;
         display: flex;
         flex-direction: column;
-        background: pink;
       }
 
       header {
@@ -32,19 +28,14 @@ class ModalContent extends mixin(Base, MixinSlots) {
         font-size: 20px;
         font-weight: 500;
         padding: 0;
-        margin: 4px 0 4px 0;
+        margin: 16px 16px;
       }
 
       header button {
-        display: none;
         margin-left: auto;
         background-color: transparent;
         border: none;
-      }
-
-      /* */
-      header button {
-        display: initial;
+        padding: 8px;
       }
 
       header button>svg {
@@ -69,10 +60,16 @@ class ModalContent extends mixin(Base, MixinSlots) {
       }
 
       main p {
-       color: pink;
+        color: black; /* */
+        font-family: var(--fontFamily);
+        font-size: 16px;
+        font-weight: 400;
+        padding: 0;
+        margin: 8px 16px;
       }
 
       footer {
+        margin: 4px 8px;
         display: flex;
         justify-content: flex-end;
         column-gap: 8px;
@@ -97,7 +94,7 @@ class ModalContent extends mixin(Base, MixinSlots) {
     <x-wrapper>
       <header>
         <h3 class="headline"></h3>
-        <button value="null" title="Dismiss" class="control">
+        <button title="Dismiss" class="control">
           <svg viewBox="0 0 24 24">
             <path
               d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z" />
@@ -124,6 +121,23 @@ class ModalContent extends mixin(Base, MixinSlots) {
   set buttons(arg) {
     this.#buttons = arg
     this.#addButtons(arg);
+  }
+
+  /* Returns flag that controls visibility of top close button. */
+  get dismissible() {
+    return this.#dismissible;
+  }
+
+  /* Sets flag that controls visibility of top close button. */
+  set dismissible(arg) {
+    if (arg === true) {
+      this.root.querySelector('header button').style.display = 'initial';
+    }
+    else {
+      this.root.querySelector('header button').style.display = 'none';
+    }
+    this.#dismissible = arg;
+   
   }
 
   /* Returns headline. */
@@ -171,7 +185,6 @@ class ModalContent extends mixin(Base, MixinSlots) {
   }
 
 }
-
 
 define(ModalContent);
 pythonize(ModalContent);
