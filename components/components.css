@@ -91,18 +91,7 @@ body {
   font-size: 14px;
 }
 
-/* NATIVE HTML ELEMENTS */
-
-a {
-  box-sizing: border-box;
-  display: flex;
-  align-items: center;
-  font-family: var(--fontFamily);
-  font-size: 16px;
-  white-space: nowrap;
-}
-
-/* CLASSES FOR NATIVE HTML ELEMENTS */
+/* CLASSES FOR NATIVE HTML ELEMENTS ADDED TO COMPONENTS */
 
  a.home-side {
   box-sizing: border-box;
