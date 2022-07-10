@@ -13,3 +13,4 @@ const mixin = (Base, ...Mixins) => {
 }
 
 export { mixin };
+

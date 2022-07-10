@@ -53,22 +53,31 @@ const MixinFocus = Parent => {
     }
   
     set focusScope(arg) {
+      this.#focusScope = arg;
+      console.log(arg);
       if (arg) {
         this.addEventListener('click', this.#setFocusBound);
       }
       else {
         this.removeEventListener('click', this.#setFocusBound);
       }
-      this.#focusScope = arg
+      
       this.setAttribute('focus-scope', arg);
     }
 
     #setFocus(event) {
-      focus.set(event.target, this.getAttribute('focus-scope'));
+      //focus.set(event.target, this.getAttribute('focus-scope'));
+      //focus.set(event.target, this.focusScope);
+      console.log(this, this.focusScope);  //
+      focus.set(this, this.focusScope);
+    }
+
+    stuff() {
+      console.log("stuff")
     }
 
   }
 
 }
 
-export { MixinFocus, focus };
+export { MixinFocus };

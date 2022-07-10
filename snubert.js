@@ -36,7 +36,6 @@ class Snubert {
       const eeControlButtons = cModalContent.root.querySelectorAll('button.control')
       eeControlButtons.forEach(element => element.addEventListener('click', event => {
         // 'event.target._value' avoids conversion of to string (as 'event.target.value' would).
-        console.log(event.target._value);  //
         cModal.hide();
         callback && callback(event.target._value);
         resolve(event.target._value);

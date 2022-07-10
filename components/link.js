@@ -6,7 +6,8 @@ import { MixinFocus } from './mixins/mixin-focus.js';
 import { MixinSlots } from './mixins/mixin-slots.js';
 import { MixinStyles } from './mixins/mixin-styles.js';
 
-class Link extends mixin(Base, MixinClick, MixinFocus, MixinSlots, MixinStyles) {
+//class Link extends mixin(Base, MixinClick, MixinFocus, MixinSlots, MixinStyles) {
+class Link extends MixinClick(MixinFocus(MixinSlots(MixinStyles(Base)))) {
   #eLink;
   constructor(properties) {
     super();

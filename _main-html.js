@@ -28,6 +28,15 @@ signupLink.addEventListener('click', event => {
 
 
 
+
+signupLink.stuff()
+signupLink.onClick = () => {console.log("Clicked")};
+
+
+
+
+
+
 // loginLink:
 const loginLink = document.getElementById('loginLink');
 loginLink.focusScope = 'top';
