@@ -29,8 +29,7 @@ signupLink.addEventListener('click', event => {
 
 
 
-signupLink.stuff()
-signupLink.onClick = () => {console.log("Clicked")};
+signupLink.foo();  //
 
 
 
