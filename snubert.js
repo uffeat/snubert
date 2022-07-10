@@ -1,9 +1,6 @@
 import normalizeStylesheet from "./styles/normalize.css" assert { type: "css" };
 import * as components from './components/all.js';
 import * as utils from './utils/all.js';
-import { focus } from './components/mixins/mixin-focus.js';
-import { states } from './components/mixins/mixin-states.js';
-import { pythonize } from './utils/pythonize.js';
 import { ModalContent } from './components/modal-content.js';
 
 /* Class for the 'snubert' namespace. */
@@ -12,9 +9,7 @@ class Snubert {
   constructor() {
     document.adoptedStyleSheets = [...document.adoptedStyleSheets, normalizeStylesheet]
     this.components = components;
-    this.focus = focus;
-    this.states = states;
-    // Add utility functions:
+    // Add utiliies:
     for (const [prop, value] of Object.entries(utils)) {
       this[prop] = value;
     }
@@ -40,11 +35,11 @@ class Snubert {
     return new Promise(resolve => {
       const eeControlButtons = cModalContent.root.querySelectorAll('button.control')
       eeControlButtons.forEach(element => element.addEventListener('click', event => {
-        let value = event.target._value;
-        console.log(value)
+        // 'event.target._value' avoids conversion of to string (as 'event.target.value' would).
+        console.log(event.target._value);  //
         cModal.hide();
-        callback && callback(value);
-        resolve(value);
+        callback && callback(event.target._value);
+        resolve(event.target._value);
       }));
     });
   }
@@ -72,8 +67,6 @@ class Snubert {
   }
 
 }
-
-pythonize(Snubert);
 
 const snubert = new Snubert();
 window.snubert = snubert;

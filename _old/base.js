@@ -1,3 +1,4 @@
+import { pythonize } from "../utils/pythonize.js";
 import componentsStylesheet from "./components.css" assert { type: "css" };
 document.adoptedStyleSheets = [...document.adoptedStyleSheets, componentsStylesheet];
 
@@ -260,8 +261,11 @@ const mixin = (Base, ...Mixins) => {
     else {
       CompositeClass = Mixins[index](CompositeClass);
     }
+    pythonize(CompositeClass);
   }
   return CompositeClass;
 }
 
-export { Base, define, mixin };
+pythonize(Base);
+
+export { Base, define, mixin, pythonize };

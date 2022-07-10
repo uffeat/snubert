@@ -1,4 +1,4 @@
-import { Base, define, mixin, pythonize } from './base.js';
+import { Base, define, mixin } from './base.js';
 import { MixinSlots } from './mixins/mixin-slots.js';
 import { MixinStyles } from './mixins/mixin-styles.js';
 
@@ -24,6 +24,5 @@ class Shadow extends mixin(Base, MixinSlots, MixinStyles) {
 }
 
 define(Shadow);
-pythonize(Shadow);
 
 export { Shadow };

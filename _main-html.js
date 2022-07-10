@@ -8,39 +8,61 @@ const home = document.querySelector('snu-home');
 
 // signupLink:
 const signupLink = document.getElementById('signupLink');
-
+signupLink.focusScope = 'top';
 signupLink.addEventListener('click', event => {
-  snubert.focus.set(event.target, 'top');
   snubert.modal({
-    headline: "Sign up",
+    headline: "Sign-up",
     text: "Sign up?",
     buttons: [["OK", true, "Accept"], ["Cancel", false, "Dismiss"]],
-    dismissible: true,
+    dismissible: false,
   })
-  .then(value => snubert.states.update('user', value));
+  .then(value => {
+    if (value === true) {
+      snubert.states.update('user', {firstName: "Rufus"})
+    }
+  });
 });
 
 
 
 // loginLink:
 const loginLink = document.getElementById('loginLink');
-loginLink.addEventListener('click', event => {
-  snubert.focus.set(event.target, 'top');
-  
-
+loginLink.focusScope = 'top';
+loginLink.addEventListener('click', event => {  
+  snubert.modal({
+    headline: "Log-in",
+    text: "Sign in?",
+    buttons: [["OK", true, "Accept"], ["Cancel", false, "Dismiss"]],
+    dismissible: false,
+  })
+  .then(value => {
+    if (value === true) {
+      snubert.states.update('user', {firstName: "Rufus"})
+    }
+  });
 });
 
 // logoutLink:
 const logoutLink = document.getElementById('logoutLink');
+logoutLink.focusScope = 'top';
 logoutLink.addEventListener('click', event => {
-  snubert.focus.set(event.target, 'top');
-
+  snubert.modal({
+    headline: "Log-out",
+    text: "Do you wish to log out?",
+    buttons: [["Yes", true, "Log out"], ["No", false, "Do not log out"]],
+    dismissible: true,
+  })
+  .then(value => {
+    if (value === true) {
+      snubert.states.update('user', null)
+    }
+  });
 });
 
 // buttonLink:
 const buttonLink = document.getElementById('buttonLink');
+logoutLink.focusScope = 'global';
 buttonLink.addEventListener('click', event => {
-  snubert.focus.set(event.target);
   snubert.states.update('page', `
   <snu-button ripple slot="main" style="padding: 32px" class="primary">Click me!</snu-button>
   `);
@@ -48,8 +70,8 @@ buttonLink.addEventListener('click', event => {
 
 // pulseLink:
 const pulseLink = document.getElementById('pulseLink');
+pulseLink.focusScope = 'global';
 pulseLink.addEventListener('click', event => {
-  snubert.focus.set(event.target);
   snubert.states.update('page', `<snu-pulse on slot="main" style="padding: 32px">New</snu-pulse>`);
 });
 

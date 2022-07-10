@@ -1,5 +1,3 @@
-import { pythonize } from './pythonize.js';
-
 const basics = {
   "light1": {
     "backgroundColor": "white",
@@ -318,8 +316,6 @@ class Theme {
   }
 
 }
-
-pythonize(Theme);
 
 const theme = new Theme();
 

@@ -1,5 +1,3 @@
-import { pythonize } from './pythonize.js';
-
 class Storage {
   #keys;
   constructor() {
@@ -58,8 +56,6 @@ class Storage {
   }
 
 }
-
-pythonize(Storage);
 
 const storage = new Storage();
 

@@ -1,4 +1,4 @@
-import { Base, define, pythonize } from './base.js';
+import { Base, define } from './base.js';
 
 /* . */
 class InputText extends Base {
@@ -145,6 +145,5 @@ class InputText extends Base {
 }
 
 define(InputText);
-pythonize(InputText);
 
 export { InputText };

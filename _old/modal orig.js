@@ -1,5 +1,5 @@
-import { Base, define, mixin, pythonize } from './base.js';
-import { MixinSlots } from './mixins/mixin-slots.js';
+import { Base, define, mixin, pythonize } from '../components/base.js';
+import { MixinSlots } from '../components/mixins/mixin-slots.js';
 
 /* . */
 class Modal extends mixin(Base, MixinSlots) {

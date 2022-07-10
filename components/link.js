@@ -1,11 +1,10 @@
-import { Base, define, mixin, pythonize } from './base.js';
+import { Base, define, mixin } from './base.js';
 import { MixinClick } from './mixins/mixin-click.js';
 import { MixinFocus } from './mixins/mixin-focus.js';
 import { MixinSlots } from './mixins/mixin-slots.js';
-import { MixinStates } from './mixins/mixin-states.js';
 import { MixinStyles } from './mixins/mixin-styles.js';
 
-class Link extends mixin(Base, MixinClick, MixinFocus, MixinSlots, MixinStates, MixinStyles) {
+class Link extends mixin(Base, MixinClick, MixinFocus, MixinSlots, MixinStyles) {
   #eLink;
   constructor(properties) {
     super();
@@ -56,6 +55,5 @@ class Link extends mixin(Base, MixinClick, MixinFocus, MixinSlots, MixinStates, 
 }
 
 define(Link);
-pythonize(Link);
 
 export { Link };
