@@ -6,6 +6,9 @@ snubert.theme.setTheme({ basic: 'light1', primary: 'brown', secondary: 'deepOran
 
 const home = document.querySelector('snu-home');
 
+
+
+
 // signupLink:
 const signupLink = document.getElementById('signupLink');
 signupLink.focusScope = 'top';
@@ -80,6 +83,7 @@ snubert.states.addSubscriber('user', data => {
   if (data === null) {
     home.disabled = true;
     home.close();
+    home.clearSlot('main');
     signupLink.style.display = 'flex';
     loginLink.style.display = 'flex';
     logoutLink.style.display = 'none';
@@ -100,4 +104,13 @@ snubert.states.addSubscriber('page', data => {
     home.insertAdjacentHTML('beforeend', data);
   }
 });
+
+
+
+const buttonX1 = snubert.createComponent('ButtonX');
+buttonX1.textContent = "Button X";
+home.addElement(buttonX1, {slot: 'main'});
+
+const button1 = snubert.createComponent('Button', {text: "Button"});
+home.addElement(button1, {slot: 'main'});
 

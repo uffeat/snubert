@@ -4,11 +4,13 @@ document.adoptedStyleSheets = [...document.adoptedStyleSheets, componentsStylesh
 /* Base class for components. Sets up shadow DOM basics and manages properties <-> attributes sync. */
 class Base extends HTMLElement {
   #root;
+  //tagNamePrefix = 'snu';
   constructor() {
     super();
     this.#root = this.attachShadow({
       mode: 'open',
     });
+    //this._tagName = `${this.tagNamePrefix}-${this.pascalToKebab(this.constructor.name)}`;  //
   }
 
   /* Returns (light DOM) html. */
@@ -222,46 +224,7 @@ class Base extends HTMLElement {
       this[prop] = value;
     }
   }
+  
 }
 
-/* Registers custom element with tag name derived from component class name. */
-const define = Component => {
-  // Custom element tag name prefix (DO NOT CHANGE since tage name may be used for identifiying components):
-  const prefix = 'snu';
-  /* Returns kebab-case representation of Pascal-case string. */
-  const pascalToKebab = pascal => {
-    /* Returns true if character 'c' is either upper case or contains an integer. */
-    const isUpperOrNumber = c => {
-      const isUpper = c.charCodeAt(0) >= 65 && c.charCodeAt(0) <= 90;
-      const isNumber = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'].includes(c)
-      return isUpper || isNumber;
-    }
-    return pascal.split('').map(
-      (c, i) => isUpperOrNumber(c) && i > 0 ? '-' + c.toLowerCase() : c.toLowerCase()
-    ).join('');
-  }
-  const tagName = prefix + '-' + pascalToKebab(Component.name)
-  if (!customElements.get(tagName)) {
-    customElements.define(tagName, Component)
-  }
-  else {
-    console.warn(`Custom element '${tagName}' already defined.`)
-  }
-
-}
-
-/* Returns a composite class with an inheritance hierarchy derived from Base and Mixin functions. */
-const mixin = (Base, ...Mixins) => {
-  let CompositeClass;
-  for (let index = 0; index < Mixins.length; index++) {
-    if (index === 0) {
-      CompositeClass = Mixins[0](Base);
-    }
-    else {
-      CompositeClass = Mixins[index](CompositeClass);
-    }
-  }
-  return CompositeClass;
-}
-
-export { Base, define, mixin };
+export { Base };

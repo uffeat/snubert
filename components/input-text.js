@@ -1,4 +1,5 @@
-import { Base, define } from './base.js';
+import { Base } from './base.js';
+import { define } from './utils/define.js';
 
 /* . */
 class InputText extends Base {

@@ -1,4 +1,6 @@
-import { Base, define, mixin } from './base.js';
+import { Base } from './base.js';
+import { mixin } from './utils/mixin.js';
+import { define } from './utils/define.js';
 import { MixinClick } from './mixins/mixin-click.js';
 import { MixinFocus } from './mixins/mixin-focus.js';
 import { MixinSlots } from './mixins/mixin-slots.js';

@@ -44,8 +44,19 @@ class Snubert {
     });
   }
 
-  createComponent(Component, properties) {
-    return new this.components[Component](properties);
+  createComponent(ComponentClassName, properties) {
+    let component =  new this.components[ComponentClassName](properties);
+
+    const ComponentClass = this.components[ComponentClassName];
+   
+
+    // TODO: No need to instantiate component (above) when only its '_elementType' and '_tagName' is needed...
+    if (ComponentClass._extends) {
+      const _component = document.createElement(ComponentClass._extends);
+      _component.setAttribute('is', ComponentClass._tagName);
+      component = _component;
+    }
+    return component;
   }
 
   createElement(tagName, kwargs = {}) {

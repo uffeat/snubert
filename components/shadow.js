@@ -1,6 +1,8 @@
-import { Base, define, mixin } from './base.js';
+import { Base } from './base.js';
+import { mixin } from './utils/mixin.js';
 import { MixinSlots } from './mixins/mixin-slots.js';
 import { MixinStyles } from './mixins/mixin-styles.js';
+import { define } from './utils/define.js';
 
 /* . */
 class Shadow extends mixin(Base, MixinSlots, MixinStyles) {

@@ -30,29 +30,6 @@ const MixinSlots = Parent => {
       elements.forEach(element => this.addElement(element, { clear: false, slot }));
     }
 
-    /* Adds slot change event handler to a given slot. */
-    addSlotChangeHandler(slot, handler) {
-      const eSlot = this.#getSlotElement(slot);
-      eSlot.addEventListener('slotchange', handler);
-    }
-
-    /* Removes added elements. */
-    clearSlot(slot = '') {
-      this.#getSlotElement(slot);  // To validate slot.
-      this.getAddedElements(slot).forEach(element => element.remove());
-    }
-
-    /* Returns elements added to slot. */
-    getAddedElements(slot = '') {
-      return this.#getSlotElement(slot).assignedElements();
-    }
-
-    /* Returns array of slot names.*/
-    getSlotNames() {
-      // NB: The value of an unnamed slot's 'name' attribute is ''.
-      return [...this.root.querySelectorAll('slot')].map(element => element.name);
-    }
-
     /* Set callback to be invoked whenever nodes are added. Callback arg: Array of added nodes. */
     addAddedNodesCallback(callback, filterFunction) {
       const observer = new MutationObserver(mutations => {
@@ -83,6 +60,28 @@ const MixinSlots = Parent => {
       observer.observe(this, { childList: true });
     }
 
+    /* Adds slot change event handler to a given slot. */
+    addSlotChangeHandler(slot, handler) {
+      const eSlot = this.#getSlotElement(slot);
+      eSlot.addEventListener('slotchange', handler);
+    }
+
+    /* Removes added elements. */
+    clearSlot(slot = '') {
+      this.#getSlotElement(slot);  // To validate slot.
+      this.getAddedElements(slot).forEach(element => element.remove());
+    }
+
+    /* Returns elements added to slot. */
+    getAddedElements(slot = '') {
+      return this.#getSlotElement(slot).assignedElements();
+    }
+
+    /* Returns array of slot names.*/
+    getSlotNames() {
+      // NB: The value of an unnamed slot's 'name' attribute is ''.
+      return [...this.root.querySelectorAll('slot')].map(element => element.name);
+    }
 
     /* Returns slot element by name. Throws exception if slot not found. */
     #getSlotElement(slot = '') {
@@ -94,7 +93,6 @@ const MixinSlots = Parent => {
     }
 
   }
-
 }
 
 

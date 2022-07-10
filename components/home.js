@@ -1,5 +1,7 @@
-import { Base, define, mixin } from './base.js';
+import { Base } from './base.js';
+import { mixin } from './utils/mixin.js';
 import { MixinSlots } from './mixins/mixin-slots.js';
+import { define } from './utils/define.js';
 
 class Home extends mixin(Base, MixinSlots) {
   #disabled = false;  // Default can be set here, since no need for initial invokation of setter.

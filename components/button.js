@@ -1,6 +1,8 @@
-import { Base, define, mixin } from './base.js';
+import { Base } from './base.js';
+import { mixin } from './utils/mixin.js';
 import { MixinClick } from './mixins/mixin-click.js';
 import { MixinStyles } from './mixins/mixin-styles.js';
+import { define } from './utils/define.js';
 
 /* Button component with optional ripple effect and style classes. */
 class Button extends mixin(Base, MixinClick, MixinStyles) {
@@ -178,4 +180,16 @@ class Button extends mixin(Base, MixinClick, MixinStyles) {
 
 define(Button);
 
-export { Button };
+/* Ligh DOM Button component. */
+class ButtonX extends HTMLButtonElement {
+  static _extends = "button";
+  constructor(properties) {
+    super();
+  }
+
+}
+
+
+define(ButtonX);
+
+export { Button, ButtonX };
