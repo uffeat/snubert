@@ -1,23 +1,12 @@
 import { categorize } from "../utils/categorize.js";
 
 /* Component mixin for managing added elements. */
-const Slots = (Parent = class {}) => {
-  class _Slots extends Parent {
+const Slots = Parent => {
+  return class _Slots extends Parent {
+    static requires = ['Base'];
     constructor() {
       super();
-      // Register meta information about mixin (registers in Base):
-      this._mixins?.push('Slots');
-      if (this._propertiesWithGetter && this._methods) {
-        const CategorizedPropertiesForMixin = categorize(_Slots.prototype);
-        this._propertiesWithGetter = [
-          ...this._propertiesWithGetter, 
-          ...CategorizedPropertiesForMixin.propertiesWithGetter
-        ];
-        this._methods = [
-          ...this._methods,
-          ...CategorizedPropertiesForMixin.methods
-        ];
-      }
+
     }
 
     /* Adds element to a given slot. */
@@ -108,7 +97,6 @@ const Slots = (Parent = class {}) => {
     }
 
   }
-  return _Slots
 }
 
 export { Slots };

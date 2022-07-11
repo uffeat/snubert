@@ -3,28 +3,10 @@ import { render as renderTop } from './top.js';
 
 
 // Build UI:
-const cHome = snubert.createComponent('Home', {
-  logo: './images/logo.svg', 
-  headline: "Snubert",
-  states: {
-    'user': function(data) {
-      if (data === true) {
-        this.disabled = false;
-        if (window.innerWidth > 600) {
-          this.open();
-        }
-      }
-      else {
-        this.disabled = true;
-        this.close();
-      }
-    }
-  }
-})
-cHome.mount(snubert.eRoot)
+
 
 // ... side:
-renderSide(cHome)
+
 
 // ... top:
 renderTop(cHome)

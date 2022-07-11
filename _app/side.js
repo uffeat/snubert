@@ -1,3 +1,5 @@
+// TODO: Refactor to light DOM component.
+
 const render = parent => {
 
   const container = document.createElement('div');
