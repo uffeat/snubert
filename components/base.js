@@ -1,3 +1,4 @@
+import { categorize } from './utils/categorize.js';
 import componentsStylesheet from "./components.css" assert { type: "css" };
 document.adoptedStyleSheets = [...document.adoptedStyleSheets, componentsStylesheet];  //
 
@@ -9,44 +10,21 @@ class Base extends HTMLElement {
     this.#root = this.attachShadow({
       mode: 'open',
     });
-    this._mixins = [];  //
+    // TODO: Check if "isinstance" can be used instead:
+    this._mixins = [];
 
+    const CategorizedPropertiesForBase = categorize(Base.prototype);
+    const CategorizedPropertiesForClass = categorize(this.constructor.prototype);
 
+    this._propertiesWithGetter = [
+      ...CategorizedPropertiesForBase.propertiesWithGetter,
+      ...CategorizedPropertiesForClass.propertiesWithGetter
+    ];
 
-    // Examples of proto: 'Base.prototype', 'this.constructor.prototype'.
-    const getCategorizedProperties = proto => {
-      const propertiesWithGetter = [];
-      const methods = [];
-      const uncategorized = [];
-      Object.getOwnPropertyNames(proto)
-        .filter(name => name.startsWith('_') === false)
-        .forEach(name => {
-          const descriptor = Object.getOwnPropertyDescriptor(proto, name);
-          if (descriptor.get) {
-            propertiesWithGetter.push(name);
-          }
-          else if (typeof (descriptor.value) === 'function') {
-            const doNotRegister = ['constructor', 'attributeChangedCallback']
-            !doNotRegister.includes(name) && methods.push(name);
-          }
-          else {
-            uncategorized.push(name);
-          }
-        });
-      return { propertiesWithGetter, methods, uncategorized };
-    }
-
-    const CategorizedPropertiesForBase = getCategorizedProperties(Base.prototype);
-    const CategorizedPropertiesForClass = getCategorizedProperties(this.constructor.prototype);
-    console.log(CategorizedPropertiesForBase);
-    console.log(CategorizedPropertiesForClass);
-
-
-
-    //this._propertyNames = [
-    //...Object.getOwnPropertyNames(Base.prototype),
-    //...Object.getOwnPropertyNames(this.constructor.prototype)
-    //];
+    this._methods = [
+      ...CategorizedPropertiesForBase.methods,
+      ...CategorizedPropertiesForClass.methods
+    ];
 
   }
 

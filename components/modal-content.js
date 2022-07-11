@@ -1,10 +1,10 @@
 import { Base } from './base.js';
 import { mixin } from './utils/mixin.js';
-import { MixinSlots } from './mixins/mixin-slots.js';
+import { Slots } from './mixins/slots.js';
 import { define } from './utils/define.js';
 
 /* . */
-class ModalContent extends mixin(Base, MixinSlots) {
+class ModalContent extends mixin(Base, Slots) {
   #buttons;
   #dismissible;
   #headline;

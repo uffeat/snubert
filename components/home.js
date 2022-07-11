@@ -1,9 +1,9 @@
 import { Base } from './base.js';
 import { mixin } from './utils/mixin.js';
-import { MixinSlots } from './mixins/mixin-slots.js';
+import { Slots } from './mixins/slots.js';
 import { define } from './utils/define.js';
 
-class Home extends mixin(Base, MixinSlots) {
+class Home extends mixin(Base, Slots) {
   #disabled = false;  // Default can be set here, since no need for initial invokation of setter.
   constructor(properties) {
     super()

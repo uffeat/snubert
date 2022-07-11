@@ -2,11 +2,11 @@ import { Base } from './base.js';
 import { mixin } from './utils/mixin.js';
 import { define } from './utils/define.js';
 import { Click } from './mixins/click.js';
-import { MixinFocus } from './mixins/mixin-focus.js';
-import { MixinSlots } from './mixins/mixin-slots.js';
-import { MixinStyles } from './mixins/mixin-styles.js';
+import { Focus } from './mixins/focus.js';
+import { Slots } from './mixins/slots.js';
+import { Styles } from './mixins/styles.js';
 
-class Link extends mixin(Base, Click, MixinFocus, MixinSlots, MixinStyles) {
+class Link extends mixin(Base, Click, Focus, Slots, Styles) {
   #eLink;
   constructor(properties) {
     super();

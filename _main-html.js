@@ -9,6 +9,7 @@ const home = document.querySelector('snu-home');
 const signupLink = document.getElementById('signupLink');
 // signupLink.focusScope = 'top';
 signupLink.addEventListener('click', event => {
+  snubert.focus.set(event.target, 'top');
   snubert.modal({
     headline: "Sign-up",
     text: "Sign up?",
@@ -24,8 +25,8 @@ signupLink.addEventListener('click', event => {
 
 // loginLink:
 const loginLink = document.getElementById('loginLink');
-// loginLink.focusScope = 'top';
 loginLink.addEventListener('click', event => {  
+  snubert.focus.set(event.target, 'top');
   snubert.modal({
     headline: "Log-in",
     text: "Sign in?",
@@ -43,6 +44,7 @@ loginLink.addEventListener('click', event => {
 const logoutLink = document.getElementById('logoutLink');
 // logoutLink.focusScope = 'top';
 logoutLink.addEventListener('click', event => {
+  snubert.focus.set(event.target, 'top');
   snubert.modal({
     headline: "Log-out",
     text: "Do you wish to log out?",
@@ -60,6 +62,7 @@ logoutLink.addEventListener('click', event => {
 const buttonLink = document.getElementById('buttonLink');
 //logoutLink.focusScope = 'global';
 buttonLink.addEventListener('click', event => {
+  snubert.focus.set(event.target, 'side');
   snubert.states.update('page', `
   <snu-button ripple slot="main" style="padding: 32px" class="primary">Click me!</snu-button>
   `);
@@ -69,6 +72,7 @@ buttonLink.addEventListener('click', event => {
 const pulseLink = document.getElementById('pulseLink');
 //pulseLink.focusScope = 'global';
 pulseLink.addEventListener('click', event => {
+  snubert.focus.set(event.target, 'side');
   snubert.states.update('page', `<snu-pulse on slot="main" style="padding: 32px">New</snu-pulse>`);
 });
 
@@ -100,7 +104,6 @@ snubert.states.addSubscriber('page', data => {
 });
 
 
-
 const buttonX1 = snubert.createComponent('ButtonX');
 buttonX1.textContent = "Button X";
 home.addElement(buttonX1, {slot: 'main'});
@@ -108,9 +111,18 @@ home.addElement(buttonX1, {slot: 'main'});
 
 const button1 = snubert.createComponent('Button', {text: "Button"});
 home.addElement(button1, {slot: 'main'});
-console.log(button1._mixins);
-button1.onClick = () => console.log("Clicked");
-//console.log(button1._propertyNames);
+button1.onClick = () => console.log("Button clicked");
+//console.log(button1._mixins);
+//console.log(button1._propertiesWithGetter);
+//console.log(button1._methods);
+
+const link1 = snubert.createComponent('Link', {text: "Link"});
+home.addElement(link1, {slot: 'main'});
+link1.onClick = () => console.log("Link clicked");
+link1.focusScope = 'top';
+console.log(link1._mixins);
+console.log(link1._propertiesWithGetter);
+console.log(link1._methods);
 
 
 

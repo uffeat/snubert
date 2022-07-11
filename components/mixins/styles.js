@@ -1,8 +1,23 @@
+import { categorize } from "../utils/categorize.js";
+
 /* Mixin that enables style-related features. */
-const MixinStyles = Parent => {
-  return class extends Parent {
+const Styles = (Parent = class {}) => {
+  class _Styles extends Parent {
     constructor() {
       super();
+      // Register meta information about mixin (registers in Base):
+      this._mixins?.push('Styles');
+      if (this._propertiesWithGetter && this._methods) {
+        const CategorizedPropertiesForMixin = categorize(_Styles.prototype);
+        this._propertiesWithGetter = [
+          ...this._propertiesWithGetter, 
+          ...CategorizedPropertiesForMixin.propertiesWithGetter
+        ];
+        this._methods = [
+          ...this._methods,
+          ...CategorizedPropertiesForMixin.methods
+        ];
+      }
     }
 
     /* Adds styles to component (with constructable stylesheet). */
@@ -60,7 +75,7 @@ const MixinStyles = Parent => {
     }
 
   }
-
+  return _Styles;
 }
 
-export { MixinStyles };
+export { Styles };

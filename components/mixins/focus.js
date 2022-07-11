@@ -1,9 +1,10 @@
 import { focus } from '../imports.js';
+import { categorize } from "../utils/categorize.js";
 
 
 /* Mixin that enables local or global focus control. */
-const MixinFocus = Parent => {
-  return class extends Parent {
+const Focus = (Parent = class {}) => {
+  class _Focus extends Parent {
     #focusScope;
     // Bind event handlers (allows removal):
     #setFocusBound = this.#setFocus.bind(this);
@@ -11,6 +12,19 @@ const MixinFocus = Parent => {
       super();
       if (!this.constructor?.observedAttributes?.includes('focus-scope')) {
         console.log(`'focus-scope' not observed attribute. Mixin applied without attribute reflection.`);
+      }
+      // Register meta information about mixin (registers in Base):
+      this._mixins?.push('Focus');
+      if (this._propertiesWithGetter && this._methods) {
+        const CategorizedPropertiesForMixin = categorize(_Focus.prototype);
+        this._propertiesWithGetter = [
+          ...this._propertiesWithGetter, 
+          ...CategorizedPropertiesForMixin.propertiesWithGetter
+        ];
+        this._methods = [
+          ...this._methods,
+          ...CategorizedPropertiesForMixin.methods
+        ];
       }
     }
 
@@ -33,11 +47,11 @@ const MixinFocus = Parent => {
     #setFocus(event) {
       //focus.set(event.target, this.getAttribute('focus-scope'));
       //focus.set(event.target, this.focusScope);
-      console.log(this, this.focusScope);  //
-      focus.set(this, this.focusScope);
+      focus.set(this, this.focusScope);  //
     }
 
   }
+  return _Focus;
 }
 
-export { MixinFocus };
+export { Focus };

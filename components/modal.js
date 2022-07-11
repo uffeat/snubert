@@ -1,10 +1,10 @@
 import { Base } from './base.js';
 import { mixin } from './utils/mixin.js';
 import { define } from './utils/define.js';
-import { MixinSlots } from './mixins/mixin-slots.js';
+import { Slots } from './mixins/slots.js';
 
 /* Bare-bones modal component. */
-class Modal extends mixin(Base, MixinSlots) {
+class Modal extends mixin(Base, Slots) {
   #dismissible;
   #open;
   // Define and bind event handlers (for the binding itself and to enable removal):
