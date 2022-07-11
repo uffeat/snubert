@@ -1,0 +1,154 @@
+@font-face {
+  font-family: 'Open Sans';
+  src: url("../fonts/Open_Sans/OpenSans-VariableFont_wdth\,wght.ttf") format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+:root {
+  --primaryColor50: #E8F5E9;
+  --primaryColor100: #C8E6C9;
+  --primaryColor200: #A5D6A7;
+  --primaryColor300: #81C784;
+  --primaryColor400: #66BB6A;
+  --primaryColor500: #4CAF50;
+  --primaryColor600: #43A047;
+  --primaryColor700: #388E3C;
+  --primaryColor800: #2E7D32;
+  --primaryColor900: #1B5E20;
+  --primaryColorA100: #B9F6CA;
+  --primaryColorA200: #69F0AE;
+  --primaryColorA400: #00E676;
+  --primaryColorA700: #00C853;
+
+  --secondaryColor50: #E8F5E9;
+  --secondaryColor100: #C8E6C9;
+  --secondaryColor200: #A5D6A7;
+  --secondaryColor300: #81C784;
+  --secondaryColor400: #66BB6A;
+  --secondaryColor500: #4CAF50;
+  --secondaryColor600: #43A047;
+  --secondaryColor700: #388E3C;
+  --secondaryColor800: #2E7D32;
+  --secondaryColor900: #1B5E20;
+  --secondaryColorA100: #B9F6CA;
+  --secondaryColorA200: #69F0AE;
+  --secondaryColorA400: #00E676;
+  --secondaryColorA700: #00C853;
+  
+  --gray50: #FAFAFA;
+  --gray100:#F5F5F5;
+  --gray200: #eeeeee;
+  --gray300: #E0E0E0;
+  --gray400: #BDBDBD;
+  --gray500: #9E9E9E;
+  --gray600: #757575;
+  --gray700: #616161;
+  --gray800: #424242;
+  --gray900: #212121;
+  --grayA100: #EEEEEE;
+  --grayA200: #E0E0E0;
+  --grayA400: #9E9E9E;
+  --grayA700: #424242;
+
+  --backgroundColor: white;
+  --backgroundColorAlt: gray;
+  --textColor: black;
+  --textColorAlt: #388E3C;
+  --textColorOnPrimary: white;
+  --textColorOnSecondary: white;
+
+  --boxShadow1: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+  --boxShadowTransition1: all 0.3s cubic-bezier(.25,.8,.25,1);
+  --boxShadowHover1: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+  
+  --boxShadow2: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+  --boxShadow3: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+  --boxShadow4: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+  --boxShadow5: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);
+
+  --zIndex1: 10;
+  --zIndex2: 20;
+  --zIndex3: 30;
+  --zIndexMax: 99;
+}
+
+:root {
+  font-size: 6.25%;
+  /* Browser font size = 16px -> 1rem = 1px... But stick with px (browser page-zooming is more prevalent than customizing font size) */
+    --fontFamily: 'Open Sans', sans-serif;
+    overflow: hidden;
+}
+
+:root * {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--backgroundColor);
+  color: var(--textColor);
+  font-family: 'Open Sans', sans-serif;
+  font-size: 14px;
+}
+
+/* CLASSES FOR NATIVE HTML ELEMENTS ADDED TO COMPONENTS */
+
+ a.home-side {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  font-family: var(--fontFamily);
+  font-size: 16px;
+  text-decoration: none;
+  color:  var(--gray800);
+  white-space: nowrap;
+  transition: background-color 200ms, color 200ms;
+}
+
+a.home-side:hover {
+  background-color: var(--gray100);
+  color: var(--textColorAlt);
+}
+
+a.home-side:focus,
+a.home-side.focus {
+  background-color: var(--gray200);
+  color: var(--primaryColor500);
+}
+
+a.home-top {
+  position: relative;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: var(--fontFamily);
+  font-size: 16px;
+  text-decoration: none;
+  color: white; 
+  white-space: nowrap;
+  padding: 0 8px;
+  transition: background-color 200ms;
+}
+
+a.home-top:hover {
+  background-color: var(--primaryColor500);
+}
+
+a.home-top .line {
+  position: absolute;
+  top: calc(100% - 2px);
+  display: inline-block;
+  width: 100%;
+  height: 2px;
+  background-color: white;
+  transform: scale(0);
+  transition: transform 200ms;
+}
+
+a.home-top:focus .line,
+a.home-top.focus .line {
+  transform: scale(1);
+}

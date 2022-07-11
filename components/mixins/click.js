@@ -1,10 +1,17 @@
 /* Mixin that enables setting a (single) click handler for the component via the 'onClick' property. */
 // NB: Purely for conveniece; does nothing that an "outside" 'addEventListener' cannot do.
-const MixinClick = Parent => {
-  return class extends Parent {
+const Click = (Parent = class {}) => {
+  class _Click extends Parent {
     #onClick;
     constructor() {
       super();
+      this._mixins.push('Click');  //
+      if (this._propertyNames) {
+        this._propertyNames = [
+          ...this._propertyNames, 
+          ...Object.getOwnPropertyNames(this.constructor.prototype)
+        ];
+      }
     }
 
     get onClick() {
@@ -23,6 +30,7 @@ const MixinClick = Parent => {
     }
 
   }
+  return _Click;
 }
 
-export { MixinClick };
+export { Click };

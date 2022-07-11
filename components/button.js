@@ -1,18 +1,26 @@
 import { Base } from './base.js';
-import { mixin } from './utils/mixin.js';
-import { MixinClick } from './mixins/mixin-click.js';
+import { mixin2 } from './utils/mixin-2.js';
+import { Click } from './mixins/click.js';
 import { MixinStyles } from './mixins/mixin-styles.js';
 import { define } from './utils/define.js';
 
 /* Button component with optional ripple effect and style classes. */
-class Button extends mixin(Base, MixinClick, MixinStyles) {
+class Button extends mixin2(Base, Click, MixinStyles) {
   #eButton;
   #ripple;
   #value;
+  static mixins = [];  //
+  static inheritedPropertyNames = [];  //
   // Bind event handlers (allows removal):
   #addRippleBound = this.#addRipple.bind(this);
   constructor(properties) {
     super();
+    
+
+    
+
+
+
     this.rootHtml = /*html*/ `
     <style>
       button {

@@ -1,38 +1,4 @@
-class Focus {
-  #elements = {}
-  /*
-  Example:
-  {
-    'global': element0,
-    'scope1': element1,
-    'scope2': element2,
-    ...
-  }
-  */
-  get(scope = 'global') {
-    return this.#elements[scope];
-  }
-
-  reset(scope = 'global') {
-    this.getFocusElement(scope) && this.get(scope).classList.remove('focus');
-    this.#elements[scope] = null;
-  }
-
-  set(element, scope = 'global') {
-    // Only take action if change in focus element:
-    if (element !== this.get(scope)) {
-      // If old focus element, remove '.focus' class:
-      this.get(scope) && this.get(scope).classList.remove('focus');
-      // Set new focus element:
-      this.#elements[scope] = element;
-      // If new focus element, add '.focus' class:
-      element && element.classList.add('focus');
-    }
-  }
-
-}
-
-const focus = new Focus();
+import { focus } from '../imports.js';
 
 
 /* Mixin that enables local or global focus control. */
@@ -61,7 +27,6 @@ const MixinFocus = Parent => {
       else {
         this.removeEventListener('click', this.#setFocusBound);
       }
-      
       this.setAttribute('focus-scope', arg);
     }
 
@@ -72,13 +37,7 @@ const MixinFocus = Parent => {
       focus.set(this, this.focusScope);
     }
 
-    //
-    stuff() {
-      console.log("stuff")
-    }
-
   }
-
 }
 
 export { MixinFocus };

@@ -1,16 +1,53 @@
 import componentsStylesheet from "./components.css" assert { type: "css" };
-document.adoptedStyleSheets = [...document.adoptedStyleSheets, componentsStylesheet];
+document.adoptedStyleSheets = [...document.adoptedStyleSheets, componentsStylesheet];  //
 
 /* Base class for components. Sets up shadow DOM basics and manages properties <-> attributes sync. */
 class Base extends HTMLElement {
   #root;
-  //tagNamePrefix = 'snu';
   constructor() {
     super();
     this.#root = this.attachShadow({
       mode: 'open',
     });
-    //this._tagName = `${this.tagNamePrefix}-${this.pascalToKebab(this.constructor.name)}`;  //
+    this._mixins = [];  //
+
+
+
+    // Examples of proto: 'Base.prototype', 'this.constructor.prototype'.
+    const getCategorizedProperties = proto => {
+      const propertiesWithGetter = [];
+      const methods = [];
+      const uncategorized = [];
+      Object.getOwnPropertyNames(proto)
+        .filter(name => name.startsWith('_') === false)
+        .forEach(name => {
+          const descriptor = Object.getOwnPropertyDescriptor(proto, name);
+          if (descriptor.get) {
+            propertiesWithGetter.push(name);
+          }
+          else if (typeof (descriptor.value) === 'function') {
+            const doNotRegister = ['constructor', 'attributeChangedCallback']
+            !doNotRegister.includes(name) && methods.push(name);
+          }
+          else {
+            uncategorized.push(name);
+          }
+        });
+      return { propertiesWithGetter, methods, uncategorized };
+    }
+
+    const CategorizedPropertiesForBase = getCategorizedProperties(Base.prototype);
+    const CategorizedPropertiesForClass = getCategorizedProperties(this.constructor.prototype);
+    console.log(CategorizedPropertiesForBase);
+    console.log(CategorizedPropertiesForClass);
+
+
+
+    //this._propertyNames = [
+    //...Object.getOwnPropertyNames(Base.prototype),
+    //...Object.getOwnPropertyNames(this.constructor.prototype)
+    //];
+
   }
 
   /* Returns (light DOM) html. */
@@ -224,7 +261,7 @@ class Base extends HTMLElement {
       this[prop] = value;
     }
   }
-  
+
 }
 
 

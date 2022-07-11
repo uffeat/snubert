@@ -1,4 +1,5 @@
 import normalizeStylesheet from "./styles/normalize.css" assert { type: "css" };
+import mainStylesheet from "./styles/main.css" assert { type: "css" };
 import * as components from './components/all.js';
 import * as utils from './utils/all.js';
 import { ModalContent } from './components/modal-content.js';
@@ -7,7 +8,7 @@ import { ModalContent } from './components/modal-content.js';
 class Snubert {
   #root;
   constructor() {
-    document.adoptedStyleSheets = [...document.adoptedStyleSheets, normalizeStylesheet]
+    document.adoptedStyleSheets = [...document.adoptedStyleSheets, normalizeStylesheet, mainStylesheet]
     this.components = components;
     // Add utiliies:
     for (const [prop, value] of Object.entries(utils)) {

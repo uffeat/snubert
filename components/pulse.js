@@ -1,12 +1,12 @@
 import { Base } from './base.js';
 import { mixin } from './utils/mixin.js';
-import { MixinClick } from './mixins/mixin-click.js';
+import { Click } from './mixins/click.js';
 import { MixinSlots } from './mixins/mixin-slots.js';
 import { MixinStyles } from './mixins/mixin-styles.js';
 import { define } from './utils/define.js';
 
 /* Component for marking. */
-class Pulse extends mixin(Base, MixinClick, MixinSlots, MixinStyles) {
+class Pulse extends mixin(Base, Click, MixinSlots, MixinStyles) {
   #on;
   constructor(properties) {
     super();
