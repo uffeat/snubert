@@ -3,7 +3,6 @@
 const MixinClick = Parent => {
   // Use named class to be able to explicitly reference the class from inside (see 'categorize').
   class Click extends Parent {
-    static requiredMixins = [];  // Applied in mixin function (mixin.js).
     #onClick;
     constructor() {
       super();

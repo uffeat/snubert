@@ -1,11 +1,18 @@
-import { Base } from './base.js';
-import { mixin } from './utils/mixin.js';
-import { Click } from './mixins/click.js';
-import { Styles } from './mixins/styles.js';
-import { define } from './utils/define.js';
+import { Base } from '../base.js';
+import { mixin } from '../utils/mixin.js';
+import { MixinAttrs } from '../mixins/attrs.js';
+import { MixinClick } from '../mixins/click.js';
+import { MixinProps } from '../mixins/props.js';
+import { MixinShadow } from '../mixins/shadow.js';
+import { MixinShadowStyles } from '../mixins/shadow-styles.js';
+import { MixinSlots } from '../mixins/slots.js';
+import { MixinStyles } from '../mixins/styles.js';
+import { define } from '../utils/define.js';
+
+// TODO: Clean up mixins.
 
 /* Button component with optional ripple effect and style classes. */
-class Button extends mixin(Base, Click, Styles) {
+class Button extends mixin(Base, MixinAttrs, MixinClick, MixinProps, MixinShadow, MixinShadow, MixinShadowStyles, MixinStyles) {
   #eButton;
   #ripple;
   #value;
@@ -15,12 +22,6 @@ class Button extends mixin(Base, Click, Styles) {
   #addRippleBound = this.#addRipple.bind(this);
   constructor(properties) {
     super();
-    
-
-    
-
-
-
     this.rootHtml = /*html*/ `
     <style>
       button {

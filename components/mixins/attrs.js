@@ -40,7 +40,14 @@ const MixinAttrs = Parent => {
         // A value attributte that represents a number has been changed.
         propValue = Number(newValue);
       }
-      this.updateProperty(prop, propValue);
+      if (this.updateProperty) {
+        this.updateProperty(prop, propValue);
+      }
+      else {
+        console.warn(`Component has no 'updateProperty' method. Property '${prop}' not updated following attribute change.
+        To fix this problem, add 'MixinPops' to the component.`);
+      }
+      
     }
 
     /* Returns and validates observed attr that correponds to a given property (camel -> kebab). */

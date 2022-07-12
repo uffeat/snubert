@@ -4,12 +4,16 @@ import { MixinClick } from '../mixins/click.js';
 import { MixinFocus } from '../mixins/focus.js';
 import { MixinProps } from '../mixins/props.js';
 import { MixinShadow } from '../mixins/shadow.js';
+import { MixinShadowStyles } from '../mixins/shadow-styles.js';
 import { MixinSlots } from '../mixins/slots.js';
 import { MixinStyles } from '../mixins/styles.js';
 import { define } from '../utils/define.js';
 
+
+// TODO: Clean up mixins.
+
 class Link extends mixin(
-  HTMLElement, MixinAttrs, MixinProps, MixinClick, MixinFocus, MixinShadow, MixinSlots, MixinStyles
+  HTMLElement, MixinAttrs, MixinProps, MixinClick, MixinFocus, MixinShadow, MixinShadowStyles, MixinSlots, MixinStyles
 ) {
   #eLink;
   constructor(properties) {

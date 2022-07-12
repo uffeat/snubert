@@ -3,14 +3,13 @@ import { focus } from '../imports.js';
 /* Mixin that enables local or global focus control. */
 const MixinFocus = Parent => {
   class Focus extends Parent {
-    static requiredMixins = [];  // Applied in mixin function (mixin.js).
     #focusScope;
     // Bind event handlers (allows removal):
     #setFocusBound = this.#setFocus.bind(this);
     constructor() {
       super();
       // Check that client class observed attribute 'focus-scope':
-      if (!this.constructor?.observedAttributes?.includes('focus-scope')) {
+      if (!this.constructor.observedAttributes?.includes('focus-scope')) {
         console.log(`Attribute 'focus-scope' not observed. Mixin applied without property -> attribute reflection.`);
       }
     }

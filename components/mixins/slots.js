@@ -1,7 +1,7 @@
 /* Component mixin for managing added elements. */
 const MixinSlots = Parent => {
   class Slots extends Parent {
-    static requiredMixins = [];  // Applied in mixin function (mixin.js).
+    static requiredMixins = ['Shadow'];  // Applied in mixin function (mixin.js).
     constructor() {
       super();
     }

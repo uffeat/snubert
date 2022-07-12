@@ -39,9 +39,7 @@ const MixinProps = Parent => {
         this[prop] = value;
       }
     }
-
-
-
+    
   }
   // Named class is returned explicitly (rather than 'return class...' in the beginning of the mixin function)
   // to allow for any processing of the class before return.
