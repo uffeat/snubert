@@ -20,16 +20,15 @@ const topHtml = /*html*/ `
 
 home.insertAdjacentHTML('beforeend', topHtml);
 
-const buttonX = snubert.createComponent('ButtonX');
-buttonX.textContent = "ButtonX";
-buttonX.ripple = true;
-home.addElement(buttonX, { slot: 'main'});
+const button1 = snubert.createComponent('Button', {text: "Button 1", ripple: true});
+button1.classList.add('primary');
+home.addElement(button1, { slot: 'main'});
 
 // Works... but not in Safari
 const buttonHtml = 
 /*html*/ `
-<button is="snu-button-x" slot="main">
-  ButtonX2
+<button is="snu-button" slot="main" ripple class="secondary">
+  Button 2
 </button>
 `;
 

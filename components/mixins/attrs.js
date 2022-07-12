@@ -8,7 +8,8 @@ const MixinAttrs = Parent => {
 
     /* Syncs attribute -> property. */
     attributeChangedCallback(attr, oldValue, newValue) {
-      if (this.noSyncAttributes?.includes(attr)) {
+      // this._noSyncAttributes should be an array containing any attributes that should escape sync with properties.
+      if (this._noSyncAttributes?.includes(attr)) {
         return
       }
       /* 
@@ -93,7 +94,7 @@ const MixinAttrs = Parent => {
       if (value === true) {
         this.setAttribute(attr, '');
       }
-      else if (!value) {  // false/null/undefined.
+      else if (value === false) {  // false/null/undefined.
         this.removeAttribute(attr);
       }
       else {

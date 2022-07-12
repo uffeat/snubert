@@ -24,7 +24,7 @@ button.snu > span.ripple {
   background-color: var(--gray300);
   /* Make ripples circular: */
   border-radius: 50%;
-  /* Ensure that each ripple emerges from nothing: */
+  /* Ensure that each ripple emerges from a point: */
   transform: scale(0);
   animation: ripple 600ms linear;
   /* top, left, width, and height are set from code. */
@@ -41,6 +41,30 @@ button.snu > span.ripple {
   }
 }
 
-button.snu[ripple] {
-  position: relative;
+button.snu.primary {
+  background-color: var(--primaryColor400);
+  color: var(--textColorOnPrimary);
+  box-shadow: var(--boxShadow1);
+}
+
+button.snu.primary:hover {
+  background-color: var(--primaryColor500);
+}
+
+button.snu.primary > span.ripple {
+  background-color: var(--primaryColor300);
+}
+
+button.snu.secondary {
+  background-color: var(--secondaryColor400);
+  color: var(--textColorOnSecondary);
+  box-shadow: var(--boxShadow1);
+}
+
+button.snu.secondary:hover {
+  background-color: var(--secondaryColor500);
+}
+
+button.snu.secondary > span.ripple {
+  background-color: var(--secondaryColor300);
 }
