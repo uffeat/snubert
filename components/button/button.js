@@ -199,10 +199,6 @@ class ButtonX extends HTMLButtonElement {
     this.style.color = 'red';
     this.addEventListener('click', event => console.log("Clicked"));
   }
-
-
-
-
 }
 
 define(ButtonX);
