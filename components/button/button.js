@@ -198,7 +198,6 @@ class ButtonX extends HTMLButtonElement {
 
 }
 
-
 define(ButtonX);
 
 export { Button, ButtonX };
