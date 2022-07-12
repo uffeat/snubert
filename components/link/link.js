@@ -1,12 +1,16 @@
-import { Base } from './base.js';
-import { mixin } from './utils/mixin.js';
-import { define } from './utils/define.js';
-import { Click } from './mixins/click.js';
-import { Focus } from './mixins/focus.js';
-import { Slots } from './mixins/slots.js';
-import { Styles } from './mixins/styles.js';
+import { mixin } from '../utils/mixin.js';
+import { MixinAttrs } from '../mixins/attrs.js';
+import { MixinClick } from '../mixins/click.js';
+import { MixinFocus } from '../mixins/focus.js';
+import { MixinProps } from '../mixins/props.js';
+import { MixinShadow } from '../mixins/shadow.js';
+import { MixinSlots } from '../mixins/slots.js';
+import { MixinStyles } from '../mixins/styles.js';
+import { define } from '../utils/define.js';
 
-class Link extends mixin(Base, Click, Focus, Slots, Styles) {
+class Link extends mixin(
+  HTMLElement, MixinAttrs, MixinProps, MixinClick, MixinFocus, MixinShadow, MixinSlots, MixinStyles
+) {
   #eLink;
   constructor(properties) {
     super();
@@ -18,7 +22,7 @@ class Link extends mixin(Base, Click, Focus, Slots, Styles) {
   </a>
   `;
     this.#eLink = this.root.querySelector('a');
-    this.updateProperties(properties);
+    this.updateProperties(properties, { href: '#' });
   }
 
   /* Defines attributes to sync with properties. */

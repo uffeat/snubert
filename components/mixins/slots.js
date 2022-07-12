@@ -1,12 +1,9 @@
-import { categorize } from "../utils/categorize.js";
-
 /* Component mixin for managing added elements. */
-const Slots = Parent => {
-  return class _Slots extends Parent {
-    static requires = ['Base'];
+const MixinSlots = Parent => {
+  class Slots extends Parent {
+    static requiredMixins = [];  // Applied in mixin function (mixin.js).
     constructor() {
       super();
-
     }
 
     /* Adds element to a given slot. */
@@ -97,6 +94,9 @@ const Slots = Parent => {
     }
 
   }
+  // Named class is returned explicitly (rather than 'return class...' in the beginning of the mixin function)
+  // to allow for any processing of the class before return.
+  return Slots;
 }
 
-export { Slots };
+export { MixinSlots };

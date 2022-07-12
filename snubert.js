@@ -2,7 +2,7 @@ import normalizeStylesheet from "./styles/normalize.css" assert { type: "css" };
 import mainStylesheet from "./styles/main.css" assert { type: "css" };
 import * as components from './components/all.js';
 import * as utils from './utils/all.js';
-import { ModalContent } from './components/modal-content.js';
+//import { ModalContent } from './components/modal-content.js';  //
 
 /* Class for the 'snubert' namespace. */
 class Snubert {
@@ -45,16 +45,23 @@ class Snubert {
   }
 
   createComponent(ComponentClassName, properties) {
-    let component =  new this.components[ComponentClassName](properties);
-
+    let component;
     const ComponentClass = this.components[ComponentClassName];
-   
-
-    // TODO: No need to instantiate component (above) when only its '_elementType' and '_tagName' is needed...
+    // Create component instance:
     if (ComponentClass._extends) {
-      const _component = document.createElement(ComponentClass._extends);
-      _component.setAttribute('is', ComponentClass._tagName);
-      component = _component;
+      // Component inherits from specific HTML element:
+
+      // TODO: Check if this can be tested in another way (than with ComponentClass._extends);
+      // could perhaps be done with component instanceof SpecificElement (from some look-up object)
+      // - but would required a "dummy instantiation of component" (silly and wasteful).
+      //  ... or, based on ComponentClass and some constructor/prototype checking...?
+
+      component = document.createElement(ComponentClass._extends);
+      component.setAttribute('is', ComponentClass._tagName);
+      component.updateProperties?.(properties);
+    }
+    else {
+      component = new this.components[ComponentClassName](properties);
     }
     return component;
   }
@@ -70,7 +77,7 @@ class Snubert {
   setRoot(element) {
     if (!element) {
       console.info(`Creating root element...`);
-      element = document.createElement('div');
+      element = document.createElement('x-root');
       element.id = 'root';
       document.body.append(element);
     }

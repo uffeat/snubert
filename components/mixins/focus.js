@@ -1,30 +1,17 @@
 import { focus } from '../imports.js';
-import { categorize } from "../utils/categorize.js";
-
 
 /* Mixin that enables local or global focus control. */
-const Focus = Parent => {
-  class _Focus extends Parent {
+const MixinFocus = Parent => {
+  class Focus extends Parent {
+    static requiredMixins = [];  // Applied in mixin function (mixin.js).
     #focusScope;
     // Bind event handlers (allows removal):
     #setFocusBound = this.#setFocus.bind(this);
     constructor() {
       super();
+      // Check that client class observed attribute 'focus-scope':
       if (!this.constructor?.observedAttributes?.includes('focus-scope')) {
-        console.log(`'focus-scope' not observed attribute. Mixin applied without attribute reflection.`);
-      }
-      // Register meta information about mixin (registers in Base):
-      this._inheritsFrom?.push('Focus');
-      if (this._propertiesWithGetter && this._methods) {
-        const CategorizedPropertiesForMixin = categorize(_Focus.prototype);
-        this._propertiesWithGetter = [
-          ...this._propertiesWithGetter, 
-          ...CategorizedPropertiesForMixin.propertiesWithGetter
-        ];
-        this._methods = [
-          ...this._methods,
-          ...CategorizedPropertiesForMixin.methods
-        ];
+        console.log(`Attribute 'focus-scope' not observed. Mixin applied without property -> attribute reflection.`);
       }
     }
 
@@ -46,12 +33,13 @@ const Focus = Parent => {
 
     #setFocus(event) {
       //focus.set(event.target, this.getAttribute('focus-scope'));
-      //focus.set(event.target, this.focusScope);
       focus.set(this, this.focusScope);  //
     }
 
   }
-  return _Focus;
+  // Named class is returned explicitly (rather than 'return class...' in the beginning of the mixin function)
+  // to allow for any processing of the class before return.
+  return Focus;
 }
 
-export { Focus };
+export { MixinFocus };

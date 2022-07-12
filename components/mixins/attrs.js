@@ -1,27 +1,10 @@
-import { categorize } from "../utils/categorize.js";  //
-
-/* Component mixin for managing added elements. */
+/* Component mixin for managing attributes incl. sync with properties. */
 const MixinAttrs = Parent => {
-
-  
-
-  class CompositeAttrs extends Parent {
-    // Capture client class ("the component class") in static property:
-    static requiredMixins = ['_Slots'];
+  class Attrs extends Parent {
+    static requiredMixins = ['Props'];  // Applied in mixin function (mixin.js).
     constructor() {
       super();
-
-      // // TODO: Turn into imported function:
-      if (this.constructor.mixins) {
-        this.constructor.mixins.push('Attrs');
-      }
-      else {
-        this.constructor.mixins = ['Attrs'];
-      }
-
     }
-
-    
 
     /* Syncs attribute -> property. */
     attributeChangedCallback(attr, oldValue, newValue) {
@@ -127,8 +110,9 @@ const MixinAttrs = Parent => {
     }
 
   }
-
-  return CompositeAttrs;
+  // Named class is returned explicitly (rather than 'return class...' in the beginning of the mixin function)
+  // to allow for any processing of the class before return.
+  return Attrs;
 }
 
 export { MixinAttrs };

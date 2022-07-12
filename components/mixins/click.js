@@ -1,26 +1,12 @@
-import { categorize } from "../utils/categorize.js";
-
 /* Mixin that enables setting a (single) click handler for the component via the 'onClick' property. */
 // NB: Purely for conveniece; does nothing that an "outside" 'addEventListener' cannot do.
-const Click = Parent => {
+const MixinClick = Parent => {
   // Use named class to be able to explicitly reference the class from inside (see 'categorize').
-  class _Click extends Parent {
+  class Click extends Parent {
+    static requiredMixins = [];  // Applied in mixin function (mixin.js).
     #onClick;
     constructor() {
       super();
-      // Register meta information about mixin (registers in Base):
-      this._inheritsFrom?.push('Click');
-      if (this._propertiesWithGetter && this._methods) {
-        const CategorizedPropertiesForMixin = categorize(_Click.prototype);
-        this._propertiesWithGetter = [
-          ...this._propertiesWithGetter, 
-          ...CategorizedPropertiesForMixin.propertiesWithGetter
-        ];
-        this._methods = [
-          ...this._methods,
-          ...CategorizedPropertiesForMixin.methods
-        ];
-      }
     }
 
     /* Returns click handler. */
@@ -41,7 +27,9 @@ const Click = Parent => {
     }
 
   }
-  return _Click;
+  // Named class is returned explicitly (rather than 'return class...' in the beginning of the mixin function)
+  // to allow for any processing of the class before return.
+  return Click;
 }
 
-export { Click };
+export { MixinClick };

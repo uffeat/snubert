@@ -1,0 +1,60 @@
+snu-home > a[slot="side"] {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  font-family: var(--fontFamily);
+  font-size: 16px;
+  text-decoration: none;
+  color:  var(--gray800);
+  white-space: nowrap;
+  transition: background-color 200ms, color 200ms;
+}
+
+snu-home > a[slot="side"]:hover {
+  background-color: var(--gray100);
+  color: var(--textColorAlt);
+}
+
+snu-home > a[slot="side"]:focus,
+snu-home > a[slot="side"].focus {
+  background-color: var(--gray200);
+  color: var(--primaryColor500);
+}
+
+snu-home > a[slot="top"] {
+  position: relative;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: var(--fontFamily);
+  font-size: 16px;
+  text-decoration: none;
+  color: white; 
+  white-space: nowrap;
+  padding: 0 8px;
+  transition: background-color 200ms;
+}
+
+snu-home > a[slot="top"]:hover {
+  background-color: var(--primaryColor500);
+}
+
+snu-home > a[slot="top"] > hr {
+  position: absolute;
+  bottom: 0;
+  width: 0;
+  padding: 0;
+  margin: 0;
+  border: none;
+  height: 2px;
+  background: white;
+  transition: width 400ms;
+}
+
+snu-home > a[slot="top"]:focus > hr,
+snu-home > a[slot="top"].focus > hr {
+  width: 100%;
+}

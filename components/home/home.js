@@ -1,10 +1,13 @@
-import { Base } from './base.js';
-import { mixin } from './utils/mixin.js';
-import { MixinAttrs } from './mixins/attrs.js';
-import { Slots } from './mixins/slots.js';
-import { define } from './utils/define.js';
+import { mixin } from '../utils/mixin.js';
+import { MixinAttrs } from '../mixins/attrs.js';
+import { MixinProps } from '../mixins/props.js';
+import { MixinShadow } from '../mixins/shadow.js';
+import { MixinSlots } from '../mixins/slots.js';
+import { define } from '../utils/define.js';
+import componentStylesheet from "./home.css" assert { type: "css" };
+document.adoptedStyleSheets = [...document.adoptedStyleSheets, componentStylesheet];
 
-class Home extends mixin(Base, Slots, MixinAttrs) {
+class Home extends mixin(HTMLElement, MixinAttrs, MixinProps, MixinShadow, MixinSlots) {
   #disabled = false;  // Default can be set here, since no need for initial invokation of setter.
   constructor(properties) {
     super()
