@@ -22,7 +22,11 @@ const define = ComponentClass => {
   // For use in 'snubert.createComponent':
   ComponentClass._tagName = tagNamePrefix + '-' + pascalToKebab(ComponentClass.name);
   if (!customElements.get(ComponentClass._tagName)) {
-    if (ComponentClass._extends) {
+
+    if (ComponentClass._extends) { ///
+
+      //console.log(ComponentClass._extends)
+
       customElements.define(ComponentClass._tagName, ComponentClass, { extends: ComponentClass._extends });
     }
     else {

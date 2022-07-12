@@ -47,22 +47,31 @@ class Snubert {
   createComponent(ComponentClassName, properties) {
     let component;
     const ComponentClass = this.components[ComponentClassName];
+
+    const getStandardTagName = (ComponentClass) => {
+        if (ComponentClass.prototype instanceof HTMLAnchorElement) {
+          return 'a';
+        }
+        else if (ComponentClass.prototype instanceof HTMLButtonElement) {
+          return 'button';
+        }
+      }
+
+    const standardTagName = getStandardTagName(ComponentClass);
+
     // Create component instance:
-    if (ComponentClass._extends) {
+    if (standardTagName) {
       // Component inherits from specific HTML element:
-
-      // TODO: Check if this can be tested in another way (than with ComponentClass._extends);
-      // could perhaps be done with component instanceof SpecificElement (from some look-up object)
-      // - but would required a "dummy instantiation of component" (silly and wasteful).
-      //  ... or, based on ComponentClass and some constructor/prototype checking...?
-
-      component = document.createElement(ComponentClass._extends);
-      component.setAttribute('is', ComponentClass._tagName);
+      component = document.createElement(standardTagName, { is : ComponentClass._tagName });
+      //component.setAttribute('is', ComponentClass._tagName);
+      
       component.updateProperties?.(properties);
+
     }
     else {
       component = new this.components[ComponentClassName](properties);
-    }
+    }    
+
     return component;
   }
 

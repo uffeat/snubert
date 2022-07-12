@@ -20,6 +20,11 @@ const topHtml = /*html*/ `
 
 home.insertAdjacentHTML('beforeend', topHtml);
 
+const buttonX = snubert.createComponent('ButtonX');
+buttonX.textContent = "ButtonX";
+
+home.addElement(buttonX, { slot: 'main'});
+
 
 
 // side:

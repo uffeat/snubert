@@ -189,15 +189,23 @@ class Button extends mixin(Base, MixinAttrs, MixinClick, MixinProps, MixinShadow
 
 define(Button);
 
+// TODO: Add rripple and perhaps make the only button component.
+
 /* Ligh DOM Button component. */
 class ButtonX extends HTMLButtonElement {
   static _extends = "button";
   constructor(properties) {
     super();
+    this.style.color = 'red';
+    this.addEventListener('click', event => console.log("Clicked"));
   }
+
+
+
 
 }
 
 define(ButtonX);
 
 export { Button, ButtonX };
+;
