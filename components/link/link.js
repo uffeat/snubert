@@ -15,6 +15,7 @@ import { define } from '../utils/define.js';
 class Link extends mixin(
   HTMLElement, MixinAttrs, MixinProps, MixinClick, MixinFocus, MixinShadow, MixinShadowStyles, MixinSlots, MixinStyles
 ) {
+  static _extends = null;
   #eLink;
   constructor(properties) {
     super();

@@ -22,13 +22,13 @@ const define = ComponentClass => {
   // Derive tag name from component name and add tag name directly onto component class (static property);
   // for use in 'snubert.createComponent':
   ComponentClass._tagName = tagNamePrefix + '-' + pascalToKebab(ComponentClass.name);
+  // Define custom element if not already defined:
   if (!customElements.get(ComponentClass._tagName)) {
-
 
     // Component classes should contain the static property '_extends' with a value of either 
     // null or the element name to extend (e.g., 'button).
     // If this is forgotten, the following automatically adds the static property '_extends' to the
-    // component classes with the corerrct value:
+    // component classes with the corerrect value:
     if (ComponentClass._extends === undefined) {
       if (ComponentClass.prototype instanceof HTMLAnchorElement) {
         ComponentClass._extends = 'a';
@@ -39,6 +39,9 @@ const define = ComponentClass => {
       else {
         ComponentClass._extends = null;
       }
+      const shownValue = ComponentClass._extends === null ? null : `'${ComponentClass._extends}'`;
+      console.warn(`static _extends = ${shownValue}; should be added to head of component class ${ComponentClass.name}.`);
+      console.log(`Static property _extends with value ${shownValue} added to component class ${ComponentClass.name}.`);
     }
 
     if (ComponentClass._extends) {

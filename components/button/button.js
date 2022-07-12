@@ -8,11 +8,14 @@ import { MixinShadowStyles } from '../mixins/shadow-styles.js';
 import { MixinSlots } from '../mixins/slots.js';
 import { MixinStyles } from '../mixins/styles.js';
 import { define } from '../utils/define.js';
+import componentStylesheet from "./button.css" assert { type: "css" };
+document.adoptedStyleSheets = [...document.adoptedStyleSheets, componentStylesheet];
 
 // TODO: Clean up mixins.
 
 /* Button component with optional ripple effect and style classes. */
 class Button extends mixin(Base, MixinAttrs, MixinClick, MixinProps, MixinShadow, MixinShadow, MixinShadowStyles, MixinStyles) {
+  static _extends = null;
   #eButton;
   #ripple;
   #value;
@@ -192,14 +195,55 @@ define(Button);
 /* Ligh DOM Button component. */
 class ButtonX extends HTMLButtonElement {
   static _extends = "button";
+  #ripple;
+  // Bind event handlers (allows removal):
+  #addRippleBound = this.#addRipple.bind(this);
   constructor(properties) {
     super();
-    this.style.color = 'red';
+    this.classList.add('snu');
     this.addEventListener('click', event => console.log("Clicked"));
   }
+
+  /* Returns ripple flag. */
+  get ripple() {
+    return this.#ripple;
+  }
+
+  /* Sets ripple flag. */
+  set ripple(arg) {
+    if (arg === true) {
+      this.addEventListener('click', this.#addRippleBound);
+      this.setAttribute('ripple', '');
+    }
+    else {
+      this.removeEventListener('click', this.#addRippleBound);
+      this.removeAttribute('ripple');
+    }
+    this.#ripple = arg
+  }
+
+  #addRipple(event) {
+    const eOldRipple = this.querySelector('span.ripple');
+    if (eOldRipple) {
+      eOldRipple.remove();
+    }
+    const eRipple = document.createElement('span');
+    eRipple.classList.add("ripple");
+    // Set eRipple size (ripple diameter):
+    const size = Math.max(this.clientWidth, this.clientHeight);
+    eRipple.style.width = eRipple.style.height = `${size}px`;
+    // Position eRipple:
+    eRipple.style.left = `${event.clientX - this.offsetLeft - size / 2}px`;
+    eRipple.style.top = `${event.clientY - this.offsetTop - size / 2}px`;
+    this.append(eRipple);
+  }
+
+
 }
 
 define(ButtonX);
+
+
 
 export { Button, ButtonX };
 ;

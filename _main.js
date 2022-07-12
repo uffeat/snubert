@@ -22,6 +22,7 @@ home.insertAdjacentHTML('beforeend', topHtml);
 
 const buttonX = snubert.createComponent('ButtonX');
 buttonX.textContent = "ButtonX";
+buttonX.ripple = true;
 home.addElement(buttonX, { slot: 'main'});
 
 // Works... but not in Safari

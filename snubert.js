@@ -51,15 +51,13 @@ class Snubert {
     // Create component instance:
     if (ComponentClass._extends) {
       // Component inherits from specific HTML element:
+      // ('_tagName' is automatically patched onto the component class in 'define')
       component = document.createElement(ComponentClass._extends, { is : ComponentClass._tagName });
-      
       component.updateProperties?.(properties);
-
     }
     else {
       component = new this.components[ComponentClassName](properties);
     }    
-
     return component;
   }
 

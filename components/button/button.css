@@ -1,0 +1,46 @@
+button.snu {
+  min-width: 64px;
+  overflow: hidden;
+  background-color: transparent;
+  color: var(--textColor);
+  font-family: var(--fontFamily);
+  font-size: 14px;
+  font-weight: 500;
+  text-transform: uppercase;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+  transition: background-color 400ms;
+}
+
+button.snu:hover {
+  background-color: var(--backgroundColorAlt);
+}
+
+button.snu > span.ripple {
+  position: absolute;
+  background-color: var(--gray300);
+  /* Make ripples circular: */
+  border-radius: 50%;
+  /* Ensure that each ripple emerges from nothing: */
+  transform: scale(0);
+  animation: ripple 600ms linear;
+  /* top, left, width, and height are set from code. */
+}
+
+@keyframes ripple {
+  from {
+    transform: scale(0);
+    opacity: 1;
+  }
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+button.snu[ripple] {
+  position: relative;
+}
