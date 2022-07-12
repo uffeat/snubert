@@ -16,8 +16,6 @@ class Button extends mixin(Base, MixinAttrs, MixinClick, MixinProps, MixinShadow
   #eButton;
   #ripple;
   #value;
-  static mixins = [];  //
-  static inheritedPropertyNames = [];  //
   // Bind event handlers (allows removal):
   #addRippleBound = this.#addRipple.bind(this);
   constructor(properties) {
