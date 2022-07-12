@@ -1,5 +1,5 @@
 const tagNamePrefix = 'snu';
- // WARNING: Do not change; tage names may be used for identifiying components elsewhere.
+// WARNING: Do not change; tage names may be used for identifiying components elsewhere.
 
 /* Returns true if character 'c' is either upper case or contains an integer. */
 // Helper for 'pascalToKebab'.
@@ -19,14 +19,29 @@ const pascalToKebab = pascal => {
 
 /* Registers custom element with tag name derived from component class name. */
 const define = ComponentClass => {
-  // For use in 'snubert.createComponent':
+  // Derive tag name from component name and add tag name directly onto component class (static property);
+  // for use in 'snubert.createComponent':
   ComponentClass._tagName = tagNamePrefix + '-' + pascalToKebab(ComponentClass.name);
   if (!customElements.get(ComponentClass._tagName)) {
 
-    if (ComponentClass._extends) { ///
 
-      //console.log(ComponentClass._extends)
+    // Component classes should contain the static property '_extends' with a value of either 
+    // null or the element name to extend (e.g., 'button).
+    // If this is forgotten, the following automatically adds the static property '_extends' to the
+    // component classes with the corerrct value:
+    if (ComponentClass._extends === undefined) {
+      if (ComponentClass.prototype instanceof HTMLAnchorElement) {
+        ComponentClass._extends = 'a';
+      }
+      else if (ComponentClass.prototype instanceof HTMLButtonElement) {
+        ComponentClass._extends = 'button';
+      }
+      else {
+        ComponentClass._extends = null;
+      }
+    }
 
+    if (ComponentClass._extends) {
       customElements.define(ComponentClass._tagName, ComponentClass, { extends: ComponentClass._extends });
     }
     else {

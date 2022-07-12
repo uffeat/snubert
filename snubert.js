@@ -48,22 +48,10 @@ class Snubert {
     let component;
     const ComponentClass = this.components[ComponentClassName];
 
-    const getStandardTagName = (ComponentClass) => {
-        if (ComponentClass.prototype instanceof HTMLAnchorElement) {
-          return 'a';
-        }
-        else if (ComponentClass.prototype instanceof HTMLButtonElement) {
-          return 'button';
-        }
-      }
-
-    const standardTagName = getStandardTagName(ComponentClass);
-
     // Create component instance:
-    if (standardTagName) {
+    if (ComponentClass._extends) {
       // Component inherits from specific HTML element:
-      component = document.createElement(standardTagName, { is : ComponentClass._tagName });
-      //component.setAttribute('is', ComponentClass._tagName);
+      component = document.createElement(ComponentClass._extends, { is : ComponentClass._tagName });
       
       component.updateProperties?.(properties);
 

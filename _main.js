@@ -22,8 +22,22 @@ home.insertAdjacentHTML('beforeend', topHtml);
 
 const buttonX = snubert.createComponent('ButtonX');
 buttonX.textContent = "ButtonX";
-
 home.addElement(buttonX, { slot: 'main'});
+
+// Works... but not in Safari
+const buttonHtml = 
+/*html*/ `
+<button is="snu-button-x" slot="main">
+  ButtonX2
+</button>
+`;
+
+home.insertAdjacentHTML('beforeend', buttonHtml);
+
+
+
+
+
 
 
 

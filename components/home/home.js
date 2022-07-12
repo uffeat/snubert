@@ -8,6 +8,7 @@ import componentStylesheet from "./home.css" assert { type: "css" };
 document.adoptedStyleSheets = [...document.adoptedStyleSheets, componentStylesheet];
 
 class Home extends mixin(HTMLElement, MixinAttrs, MixinProps, MixinShadow, MixinSlots) {
+  static _extends = null;
   #disabled = false;  // Default can be set here, since no need for initial invokation of setter.
   constructor(properties) {
     super()
