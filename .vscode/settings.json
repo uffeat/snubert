@@ -2,6 +2,6 @@
   "liveServer.settings.port": 5501,
   "files.autoSave": "afterDelay",
   "editor.tabSize": 2,
-  "editor.fontFamily": "'Anonymous Pro'",
+  "editor.fontFamily": "'JetBrains Mono'",
   "editor.fontSize": 15
 }
