@@ -47,7 +47,9 @@ class Snubert {
   createComponent(ComponentClassName, properties) {
     let component;
     const ComponentClass = this.components[ComponentClassName];
+    return new this.components[ComponentClassName](properties);;
 
+    /*
     // Create component instance:
     if (ComponentClass._extends) {
       // Component inherits from specific HTML element:
@@ -59,6 +61,7 @@ class Snubert {
       component = new this.components[ComponentClassName](properties);
     }    
     return component;
+  */
   }
 
   createElement(tagName, kwargs = {}) {
