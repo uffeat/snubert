@@ -31,8 +31,9 @@ const MixinProps = Parent => {
       }
       // Take into account that property could be write-only:
       try {
-        if (this[prop] !== value)
+        if (this[prop] !== value) {
           this[prop] = value;
+        }
       }
       catch {
         // Property is write-only. Update regardless of potential no value change:
